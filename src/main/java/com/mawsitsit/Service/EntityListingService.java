@@ -122,8 +122,7 @@ public class EntityListingService {
   }
 
   public <T extends ResourceEntity> EntityList updateEntity(Long id, EntityList<EntityContainer<T>> incomingAttributes, HttpServletRequest request) throws Exception {
-    ResourceEntity entityToUpdate = null;
-    entityToUpdate = incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class) ? hotelRepository.findOne(id) : reviewRepository.findOne(id);
+    ResourceEntity entityToUpdate = incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class) ? hotelRepository.findOne(id) : reviewRepository.findOne(id);
     if (entityToUpdate == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
