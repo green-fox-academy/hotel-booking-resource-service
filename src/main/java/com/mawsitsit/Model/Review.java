@@ -1,10 +1,10 @@
 package com.mawsitsit.Model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -23,5 +23,10 @@ public class Review extends ResourceEntity{
   @NotNull
   private String description;
   private String created_at;
+  @NotNull
+  @JsonIgnore
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JsonUnwrapped
+  private Hotel hotel;
 }
 
