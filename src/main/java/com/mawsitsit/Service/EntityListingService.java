@@ -121,12 +121,7 @@ public class EntityListingService {
   }
 
   public Page queryReviews(Specification<ResourceEntity> specs, Pageable pageable, Long id) {
-    if (specs == null) {
-      return reviewRepository.findAllByHotel_id(id, pageable);
-    } else {
-      specs = Specifications.where(SpecificationBuilder.withParameter("hotel", id)).and(specs);
-      return reviewRepository.findAll(specs, pageable);
-    }
+    return specs == null ? reviewRepository.findAllByHotel_id(id, pageable) : reviewRepository.findAll(specs, pageable);
   }
 
   public <T extends ResourceEntity> EntityList updateEntity(Long id, EntityList<EntityContainer<T>> incomingAttributes, HttpServletRequest request) throws Exception {
