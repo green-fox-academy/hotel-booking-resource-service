@@ -1,0 +1,1 @@
+# hotel-booking-resource-service
