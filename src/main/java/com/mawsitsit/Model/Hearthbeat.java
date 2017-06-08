@@ -1,5 +1,6 @@
 package com.mawsitsit.Model;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -21,4 +22,7 @@ public class Hearthbeat {
   public Hearthbeat() {
   }
 
+  public Hearthbeat(boolean status) {
+    this.status = status;
+  }
 }
