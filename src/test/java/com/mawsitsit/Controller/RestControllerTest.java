@@ -16,6 +16,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import java.nio.charset.Charset;
 
 import static org.junit.Assert.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
 
 @RunWith(SpringRunner.class)
@@ -37,4 +41,12 @@ public class RestControllerTest {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
   }
 
+  @Test
+  public void testHearthbeat() throws Exception {
+    mockMvc.perform(get("/hearthbeat"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.status").value("ok"))
+            .andExpect(jsonPath("$.database").value("ok"));
+  }
 }
