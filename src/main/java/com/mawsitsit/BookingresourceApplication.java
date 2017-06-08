@@ -20,6 +20,6 @@ public class BookingresourceApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		hearthbeatRepo.save(new Hearthbeat(true));
+		hearthbeatRepo.save(new Hearthbeat());
 	}
 }

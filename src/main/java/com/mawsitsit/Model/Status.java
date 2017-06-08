@@ -9,6 +9,9 @@ public class Status {
   private String status = "ok";
   private String database;
 
+  public Status() {
+  }
+
   public Status(String database) {
     this.database = database;
   }
