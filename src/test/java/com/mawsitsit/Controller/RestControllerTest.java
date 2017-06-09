@@ -1,12 +1,14 @@
 package com.mawsitsit.Controller;
 
 import com.mawsitsit.BookingresourceApplication;
+import com.mawsitsit.Repository.HearthbeatRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -15,7 +17,6 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.nio.charset.Charset;
 
-import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -34,6 +35,9 @@ public class RestControllerTest {
   private MockMvc mockMvc;
 
   @Autowired
+  private HearthbeatRepository hearthbeatRepo;
+
+  @Autowired
   private WebApplicationContext webApplicationContext;
 
   @Before
@@ -42,11 +46,22 @@ public class RestControllerTest {
   }
 
   @Test
+  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   public void testHearthbeat() throws Exception {
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status").value("ok"))
             .andExpect(jsonPath("$.database").value("ok"));
+  }
+
+  @Test
+  public void testHearthBeat_forError() throws Exception {
+    hearthbeatRepo.deleteAll();
+    mockMvc.perform(get("/hearthbeat"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.status").value("ok"))
+            .andExpect(jsonPath("$.database").value("error"));
   }
 }
