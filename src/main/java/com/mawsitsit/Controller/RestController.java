@@ -10,13 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RestController {
 
   @Autowired
+  private
   StatusChecker statusChecker;
 
   @GetMapping("/hearthbeat")
   public Status checkApp () {
-    if(statusChecker.serviceStatus()) {
-      return new Status("ok");
-    } else return new Status("error");
+    return statusChecker.serviceStatus();
   }
 
   @RequestMapping({"/", "/index"})
