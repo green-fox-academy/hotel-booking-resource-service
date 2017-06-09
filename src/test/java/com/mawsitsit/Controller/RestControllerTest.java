@@ -5,10 +5,11 @@ import com.mawsitsit.Repository.HearthbeatRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,7 +35,7 @@ public class RestControllerTest {
 
   private MockMvc mockMvc;
 
-  @Autowired
+  @MockBean
   private HearthbeatRepository hearthbeatRepo;
 
   @Autowired
@@ -46,8 +47,9 @@ public class RestControllerTest {
   }
 
   @Test
-  @DirtiesContext(methodMode = DirtiesContext.MethodMode.BEFORE_METHOD)
   public void testHearthbeat() throws Exception {
+    long returned = 1;
+    BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
@@ -57,7 +59,8 @@ public class RestControllerTest {
 
   @Test
   public void testHearthBeat_forError() throws Exception {
-    hearthbeatRepo.deleteAll();
+    long returned = 0;
+    BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
     mockMvc.perform(get("/hearthbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
