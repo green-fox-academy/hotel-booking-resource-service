@@ -1,0 +1,9 @@
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: booking-resource
+
+dependencies:
+  override:
+    - chmod +x gradlew
