@@ -1,8 +1,6 @@
 package com.mawsitsit.Controller;
 
-import com.mawsitsit.Model.Hearthbeat;
 import com.mawsitsit.Model.Status;
-import com.mawsitsit.Repository.HearthbeatRepository;
 import com.mawsitsit.Service.StatusChecker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +13,6 @@ public class RestController {
   private
   StatusChecker statusChecker;
 
-  @Autowired
-  private HearthbeatRepository hearthbeatRepo;
-
   @GetMapping("/hearthbeat")
   public Status checkApp () {
     return statusChecker.serviceStatus();
@@ -26,11 +21,5 @@ public class RestController {
   @RequestMapping({"/", "/index"})
   public String main() {
     return "Hello World!";
-  }
-
-  @RequestMapping("/add")
-  public String add() {
-    hearthbeatRepo.save(new Hearthbeat());
-    return "ok";
   }
 }
