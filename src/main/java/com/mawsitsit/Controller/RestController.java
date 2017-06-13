@@ -13,7 +13,7 @@ public class RestController {
   private
   StatusChecker statusChecker;
 
-  @GetMapping("/hearthbeat")
+  @GetMapping("/heartbeat")
   public Status checkApp () {
     return statusChecker.serviceStatus();
   }
