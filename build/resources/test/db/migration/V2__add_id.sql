@@ -1,0 +1,13 @@
+ALTER TABLE hearthbeat
+    ADD id INT AUTO_INCREMENT;
+
+-- ALTER TABLE hearthbeat
+--   DROP CONSTRAINT hearthbeat_pkey,
+--   ADD COLUMN id BIGINT DEFAULT 0,
+--   ALTER COLUMN id SET NOT NULL,
+--   ADD CONSTRAINT MyPrimaryKey PRIMARY KEY (id);
+--
+-- ALTER TABLE heartbeat
+--   ADD COLUMN id INT AUTO_INCREMENT,
+-- DROP PRIMARY KEY,
+-- ADD PRIMARY KEY (id);
