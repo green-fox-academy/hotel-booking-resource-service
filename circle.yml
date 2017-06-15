@@ -3,6 +3,10 @@ deployment:
     branch: master
     heroku:
       appname: booking-resource
+  tirikk:
+    branch: /tirikk-.*/
+    heroku:
+      appname: booking-resource-mate
 
 dependencies:
   override:
