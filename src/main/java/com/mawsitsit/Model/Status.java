@@ -8,11 +8,13 @@ import lombok.Setter;
 public class Status {
   private String status = "ok";
   private String database;
+  private String queue;
 
   public Status() {
   }
 
-  public Status(String database) {
+  public Status(String database, String queue) {
     this.database = database;
+    this.queue = queue;
   }
 }
