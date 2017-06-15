@@ -1,8 +1,6 @@
 package com.mawsitsit.Controller;
 
-import com.mawsitsit.Model.Hearthbeat;
 import com.mawsitsit.Model.Status;
-import com.mawsitsit.Repository.HearthbeatRepository;
 import com.mawsitsit.Service.MessageHandler;
 import com.mawsitsit.Service.StatusChecker;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +19,6 @@ public class RestController {
 
   @Autowired
   private MessageHandler handler;
-
-  @Autowired
-  private HearthbeatRepository hearthbeatRepo;
 
   @GetMapping("/hearthbeat")
   public Status checkApp () throws IOException, TimeoutException {
@@ -51,11 +46,5 @@ public class RestController {
   @RequestMapping({"/", "/index"})
   public String main() {
     return "Hello World!";
-  }
-
-  @RequestMapping("/add")
-  public String add() {
-    hearthbeatRepo.save(new Hearthbeat());
-    return "ok";
   }
 }

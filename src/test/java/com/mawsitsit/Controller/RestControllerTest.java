@@ -50,7 +50,7 @@ public class RestControllerTest {
   public void testHeartbeat_withDatabaseOk() throws Exception {
     long returned = 1;
     BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
-    mockMvc.perform(get("/hearthbeat"))
+    mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status").value("ok"))
@@ -61,7 +61,7 @@ public class RestControllerTest {
   public void testHeartBeat_withFaultyDatabase() throws Exception {
     long returned = 0;
     BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
-    mockMvc.perform(get("/hearthbeat"))
+    mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status").value("ok"))
