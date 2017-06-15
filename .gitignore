@@ -1,6 +1,8 @@
 out
 *.class
 .idea
+.build
+.classes
 
 .gradle
 /build/
@@ -10,3 +12,5 @@ gradle-app.setting
 !gradle-wrapper.jar
 
 .gradletasknamecache
+
+debug.log

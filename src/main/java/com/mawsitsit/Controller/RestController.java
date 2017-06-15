@@ -20,7 +20,7 @@ public class RestController {
   @Autowired
   private MessageHandler handler;
 
-  @GetMapping("/hearthbeat")
+  @GetMapping("/heartbeat")
   public Status checkApp () throws IOException, TimeoutException {
     if (handler.getCount() == 0) {
       handler.sendMessage();

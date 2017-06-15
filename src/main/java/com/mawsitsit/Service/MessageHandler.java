@@ -18,13 +18,13 @@ public class MessageHandler {
 
   MessageHandler() throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
     ConnectionFactory connectionFactory = new ConnectionFactory();
-    connectionFactory.setUri("amqp://rqdisqki:FNa9zavWt1xPRged6tQ8HNvcCrzasjXf@lark.rmq.cloudamqp.com/rqdisqki");
+    connectionFactory.setUri(System.getenv("AMQP_URI"));
     connection = connectionFactory.newConnection();
     channel = connection.createChannel();
+    channel.queueDeclare("heartbeat", true, false, false, null);
   }
 
   public void sendMessage() throws IOException, TimeoutException {
-    channel.queueDeclare("heartbeat", true, false, false, null);
     channel.basicPublish("", "heartbeat", MessageProperties.PERSISTENT_TEXT_PLAIN,"message".getBytes());
   }
 
