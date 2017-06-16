@@ -22,6 +22,7 @@ public class MessageHandler {
     connectionFactory.setUri(System.getenv("AMQP_URI"));
     connection = connectionFactory.newConnection();
     channel = connection.createChannel();
+    channel.queueDeclare("heartbeat", true, false, false, null);
   }
 
   public void sendMessage() throws IOException, TimeoutException {
@@ -37,7 +38,6 @@ public class MessageHandler {
   }
 
   public Integer getCount() throws IOException {
-    channel.queueDeclare("heartbeat", true, false, false, null);
     AMQP.Queue.DeclareOk declare = channel.queueDeclarePassive("heartbeat");
     return declare.getMessageCount();
   }
