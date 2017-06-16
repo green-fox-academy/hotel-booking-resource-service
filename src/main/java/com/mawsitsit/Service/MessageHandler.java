@@ -1,5 +1,6 @@
 package com.mawsitsit.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.*;
 import org.springframework.stereotype.Service;
 
@@ -43,6 +44,13 @@ public class MessageHandler {
 
   public void emptyQueue() throws IOException {
     channel.queuePurge("heartbeat");
+  }
+
+  public void dispatch(Object object) throws IOException {
+    ObjectMapper mapper = new ObjectMapper();
+    String message = mapper.writeValueAsString(object);
+    channel.queueDeclare(System.getenv("EVENT_QUEUE"), true, false, false, null);
+    channel.basicPublish("", System.getenv("EVENT_QUEUE"), null, message.getBytes());
   }
 
   @PreDestroy
