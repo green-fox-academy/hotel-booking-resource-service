@@ -2,6 +2,7 @@ package com.mawsitsit.Controller;
 
 import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Repository.HearthbeatRepository;
+import com.mawsitsit.Service.MessageHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,6 +39,9 @@ public class RestControllerTest {
   @MockBean
   private HearthbeatRepository hearthbeatRepo;
 
+  @MockBean
+  private MessageHandler messageHandler;
+
   @Autowired
   private WebApplicationContext webApplicationContext;
 
@@ -47,24 +51,28 @@ public class RestControllerTest {
   }
 
   @Test
-  public void testHearthbeat() throws Exception {
+  public void testHeartbeat_withDatabaseOk_queueHasItems() throws Exception {
     long returned = 1;
+    BDDMockito.given(messageHandler.getCount()).willReturn((int) returned);
     BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
     mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status").value("ok"))
-            .andExpect(jsonPath("$.database").value("ok"));
+            .andExpect(jsonPath("$.database").value("ok"))
+            .andExpect(jsonPath("$.queue").value("error"));
   }
 
   @Test
-  public void testHearthBeat_forError() throws Exception {
+  public void testHeartBeat_withFaultyDatabase_emptyQueue() throws Exception {
     long returned = 0;
+    BDDMockito.given(messageHandler.getCount()).willReturn((int) returned);
     BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
     mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.status").value("ok"))
-            .andExpect(jsonPath("$.database").value("error"));
+            .andExpect(jsonPath("$.database").value("error"))
+            .andExpect(jsonPath("$.queue").value("ok"));
   }
 }
