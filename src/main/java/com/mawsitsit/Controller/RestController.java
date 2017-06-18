@@ -38,6 +38,6 @@ public class RestController {
 
   @RequestMapping({"/", "/index"})
   public String main() {
-    return "Hello World!";
+    return "Hello World!!";
   }
 }
