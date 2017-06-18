@@ -40,7 +40,7 @@ public class RestControllerTest {
   private HearthbeatRepository hearthbeatRepo;
 
   @MockBean
-  private MessageHandler handler;
+  private MessageHandler messageHandler;
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -53,7 +53,7 @@ public class RestControllerTest {
   @Test
   public void testHeartbeat_withDatabaseOk_queueHasItems() throws Exception {
     long returned = 1;
-    BDDMockito.given(handler.getCount()).willReturn((int) returned);
+    BDDMockito.given(messageHandler.getCount()).willReturn((int) returned);
     BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
     mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())
@@ -66,7 +66,7 @@ public class RestControllerTest {
   @Test
   public void testHeartBeat_withFaultyDatabase_emptyQueue() throws Exception {
     long returned = 0;
-    BDDMockito.given(handler.getCount()).willReturn((int) returned);
+    BDDMockito.given(messageHandler.getCount()).willReturn((int) returned);
     BDDMockito.given(hearthbeatRepo.count()).willReturn(returned);
     mockMvc.perform(get("/heartbeat"))
             .andExpect(status().isOk())

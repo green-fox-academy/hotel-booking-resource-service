@@ -18,29 +18,22 @@ public class RestController {
   StatusChecker statusChecker;
 
   @Autowired
-  private MessageHandler handler;
+  private MessageHandler messageHandler;
 
   @GetMapping("/heartbeat")
   public Status checkApp () throws IOException, TimeoutException {
-    if (handler.getCount() == 0) {
-      handler.sendMessage();
-      handler.getMessage();
-      statusChecker.setQueueStatus("ok");
-    } else {
-      statusChecker.setQueueStatus("error");
-    }
     return statusChecker.serviceStatus();
   }
 
   @RequestMapping("/count")
   public Integer count() throws IOException {
-    return handler.getCount();
+    return messageHandler.getCount();
   }
 
   @RequestMapping("/purge")
   public Integer purge() throws IOException {
-    handler.emptyQueue();
-    return handler.getCount();
+    messageHandler.emptyQueue();
+    return messageHandler.getCount();
   }
 
   @RequestMapping({"/", "/index"})

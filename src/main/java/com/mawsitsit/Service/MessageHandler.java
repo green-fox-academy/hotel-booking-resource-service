@@ -25,11 +25,11 @@ public class MessageHandler {
     channel.queueDeclare("heartbeat", true, false, false, null);
   }
 
-  public void sendMessage() throws IOException, TimeoutException {
+  void sendMessage() throws IOException, TimeoutException {
     channel.basicPublish("", "heartbeat", MessageProperties.PERSISTENT_TEXT_PLAIN,"message".getBytes());
   }
 
-  public void getMessage() throws IOException {
+  void getMessage() throws IOException {
     GetResponse response = channel.basicGet("heartbeat", false);
     if (response != null) {
       long deliveryTag = response.getEnvelope().getDeliveryTag();
