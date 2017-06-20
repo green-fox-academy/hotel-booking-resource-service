@@ -46,7 +46,7 @@ public class RESTController {
 
   @RequestMapping({"/", "/index"})
   public String main() {
-    return "String return for testing purposes especially for Süvi <3 ";
+    return "String return for testing purposes ";
   }
 
 
