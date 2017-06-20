@@ -1,5 +1,6 @@
 package com.mawsitsit.Controller;
 
+import com.mawsitsit.Model.HotelList;
 import com.mawsitsit.Model.Status;
 import com.mawsitsit.Service.MessageHandler;
 import com.mawsitsit.Service.StatusChecker;
@@ -50,7 +51,7 @@ public class RESTController {
   }
 
   @GetMapping("/hotels")
-  public Hotel listHotels() {}
+  public HotelList listHotels() {}
 
 
   @ExceptionHandler(Exception.class)
