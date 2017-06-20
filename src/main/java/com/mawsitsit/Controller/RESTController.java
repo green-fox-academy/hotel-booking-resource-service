@@ -2,7 +2,9 @@ package com.mawsitsit.Controller;
 
 import com.mawsitsit.Model.HotelList;
 import com.mawsitsit.Model.Status;
+import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
+import com.mawsitsit.Service.PaginationService;
 import com.mawsitsit.Service.StatusChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +27,9 @@ public class RESTController {
 
   @Autowired
   private MessageHandler messageHandler;
+
+  @Autowired
+  private PaginationService paginationService;
 
   private Logger logger = LoggerFactory.getLogger(RESTController.class);
 
@@ -52,7 +57,7 @@ public class RESTController {
 
   @GetMapping("/hotels")
   public HotelList listHotels() {
-
+   return paginationService.createList();
   }
 
 
