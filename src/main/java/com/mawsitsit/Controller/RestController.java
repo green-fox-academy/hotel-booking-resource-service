@@ -6,9 +6,11 @@ import com.mawsitsit.Service.StatusChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -25,11 +27,8 @@ public class RestController {
   Logger logger = LoggerFactory.getLogger(RestController.class);
 
   @GetMapping("/heartbeat")
-  public Status checkApp () throws IOException, TimeoutException {
-    logger.debug("debug msg");
-    logger.info("info msg");
-    logger.warn("warn msg");
-    logger.error("error msg");
+  public Status checkApp(HttpServletRequest httpServletRequest) throws IOException, TimeoutException {
+    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI() );
     return statusChecker.serviceStatus();
   }
 
@@ -48,4 +47,11 @@ public class RestController {
   public String main() {
     return "Hello World!!";
   }
+
+
+  @ExceptionHandler(Exception.class)
+  public void badRequest(Exception e) {
+    logger.warn("HTTP-ERROR " + e.getStackTrace()[0].getMethodName());
+  }
+
 }
