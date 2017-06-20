@@ -29,7 +29,7 @@ public class RESTController {
 
   @GetMapping("/heartbeat")
   public Status checkApp(HttpServletRequest httpServletRequest) throws IOException, TimeoutException {
-    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI() );
+    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
     return statusChecker.serviceStatus();
   }
 
@@ -48,6 +48,9 @@ public class RESTController {
   public String main() {
     return "String return for testing purposes ";
   }
+
+  @GetMapping("/hotels")
+  public Hotel listHotels() {}
 
 
   @ExceptionHandler(Exception.class)
