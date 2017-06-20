@@ -24,7 +24,7 @@ public class RestController {
   @Autowired
   private MessageHandler messageHandler;
 
-  Logger logger = LoggerFactory.getLogger(RestController.class);
+  private Logger logger = LoggerFactory.getLogger(RestController.class);
 
   @GetMapping("/heartbeat")
   public Status checkApp(HttpServletRequest httpServletRequest) throws IOException, TimeoutException {
