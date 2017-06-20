@@ -51,7 +51,9 @@ public class RESTController {
   }
 
   @GetMapping("/hotels")
-  public HotelList listHotels() {}
+  public HotelList listHotels() {
+
+  }
 
 
   @ExceptionHandler(Exception.class)
