@@ -1,11 +1,14 @@
 package com.mawsitsit.Service;
 
+import com.mawsitsit.Model.Hotel;
+import com.mawsitsit.Model.HotelContainer;
 import com.mawsitsit.Model.HotelList;
 import com.mawsitsit.Model.Links;
 import com.mawsitsit.Repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,8 +18,11 @@ public class HotelListingService {
   private HotelRepository hotelRepository;
 
   public HotelList createList(){
-    List hotels = (List)hotelRepository.findAll();
-    return new HotelList(new Links(),hotels);
-
+    List<Hotel> hotels = (List)hotelRepository.findAll();
+    List hotelContainers = new ArrayList();
+    for(Hotel hotel : hotels) {
+      hotelContainers.add(new HotelContainer("hotel", hotel.getId(), hotel));
+    }
+    return new HotelList(new Links(),hotelContainers);
   }
 }

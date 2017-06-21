@@ -5,13 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
-
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelList {
-  private Links links;
-  private List<HotelContainer> data;
+public class HotelContainer {
+  private String type;
+  private Long id;
+  private Hotel attributes;
 }

@@ -1,7 +1,9 @@
 package com.mawsitsit.Controller;
 
+import com.mawsitsit.Model.Hotel;
 import com.mawsitsit.Model.HotelList;
 import com.mawsitsit.Model.Status;
+import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
 import com.mawsitsit.Service.HotelListingService;
 import com.mawsitsit.Service.StatusChecker;
@@ -29,6 +31,9 @@ public class RESTController {
 
   @Autowired
   private HotelListingService hotelListingService;
+
+  @Autowired
+  private HotelRepository hotelRepository;
 
   private Logger logger = LoggerFactory.getLogger(RESTController.class);
 
@@ -58,6 +63,11 @@ public class RESTController {
   public HotelList listHotels(HttpServletRequest httpServletRequest) {
     logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
     return hotelListingService.createList();
+  }
+
+  @RequestMapping("/addHotel")
+  public void addHotel() {
+    hotelRepository.save(new Hotel());
   }
 
   @ExceptionHandler(Exception.class)
