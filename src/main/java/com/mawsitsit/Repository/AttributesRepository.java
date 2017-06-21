@@ -1,9 +1,9 @@
 package com.mawsitsit.Repository;
 
-import com.mawsitsit.Model.Hotel;
+import com.mawsitsit.Model.Attributes;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HotelRepository extends CrudRepository<Hotel, Long>{
+public interface AttributesRepository extends CrudRepository<Attributes, Long> {
 }
