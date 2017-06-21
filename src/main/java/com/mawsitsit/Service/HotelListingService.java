@@ -6,6 +6,7 @@ import com.mawsitsit.Model.HotelList;
 import com.mawsitsit.Model.Links;
 import com.mawsitsit.Repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,8 +19,8 @@ public class HotelListingService {
   @Autowired
   private HotelRepository hotelRepository;
 
-  public HotelList createList(HttpServletRequest request){
-    List<Hotel> hotels = (List)hotelRepository.findAll();
+  public HotelList createList(HttpServletRequest request, Pageable pageable){
+    List<Hotel> hotels = hotelRepository.findAll(pageable).getContent();
     List hotelContainers = new ArrayList();
     for(Hotel hotel : hotels) {
       hotelContainers.add(new HotelContainer("hotel", hotel.getId(), hotel));
