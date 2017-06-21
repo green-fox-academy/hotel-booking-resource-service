@@ -1,7 +1,10 @@
 package com.mawsitsit.Controller;
 
 import com.mawsitsit.BookingresourceApplication;
+import com.mawsitsit.Model.Hotel;
+import com.mawsitsit.Model.HotelContainer;
 import com.mawsitsit.Repository.HearthbeatRepository;
+import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +21,8 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -41,6 +46,9 @@ public class RESTControllerTest {
 
   @MockBean
   private MessageHandler messageHandler;
+
+  @MockBean
+  private HotelRepository hotelRepository;
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -74,5 +82,18 @@ public class RESTControllerTest {
             .andExpect(jsonPath("$.status").value("ok"))
             .andExpect(jsonPath("$.database").value("error"))
             .andExpect(jsonPath("$.queue").value("ok"));
+  }
+
+  @Test
+  public void testHotels_withOneEntry() throws Exception {
+    List returnValue = new ArrayList();
+    returnValue.add(new Hotel());
+    BDDMockito.given(hotelRepository.findAll()).willReturn(returnValue);
+    mockMvc.perform(get("/hotels"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.data[0].type").value("hotel"))
+            .andExpect(jsonPath("$.data[0].attributes.has_wifi").value(false));
+
   }
 }

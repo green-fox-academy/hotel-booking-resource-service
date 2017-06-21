@@ -1,0 +1,16 @@
+package com.mawsitsit.Model;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class HotelContainer {
+  private String type;
+  private Long id;
+  private Hotel attributes;
+}

@@ -1,7 +1,11 @@
 package com.mawsitsit.Controller;
 
+import com.mawsitsit.Model.Hotel;
+import com.mawsitsit.Model.HotelList;
 import com.mawsitsit.Model.Status;
+import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
+import com.mawsitsit.Service.HotelListingService;
 import com.mawsitsit.Service.StatusChecker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,11 +29,17 @@ public class RESTController {
   @Autowired
   private MessageHandler messageHandler;
 
+  @Autowired
+  private HotelListingService hotelListingService;
+
+  @Autowired
+  private HotelRepository hotelRepository;
+
   private Logger logger = LoggerFactory.getLogger(RESTController.class);
 
   @GetMapping("/heartbeat")
   public Status checkApp(HttpServletRequest httpServletRequest) throws IOException, TimeoutException {
-    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI() );
+    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
     return statusChecker.serviceStatus();
   }
 
@@ -49,6 +59,16 @@ public class RESTController {
     return "String return for testing purposes ";
   }
 
+  @GetMapping("/hotels")
+  public HotelList listHotels(HttpServletRequest httpServletRequest) {
+    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
+    return hotelListingService.createList(httpServletRequest);
+  }
+
+  @RequestMapping("/addHotel")
+  public void addHotel() {
+    hotelRepository.save(new Hotel());
+  }
 
   @ExceptionHandler(Exception.class)
   public void badRequest(Exception e) {
