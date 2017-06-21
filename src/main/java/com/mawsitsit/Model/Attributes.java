@@ -5,10 +5,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Getter
@@ -18,6 +15,7 @@ public class Attributes {
   @JsonIgnore
   @Id
   @GeneratedValue (strategy = GenerationType.AUTO)
+  @Column (name = "attributes_id")
   private Long id;
   private String location;
   private String name;
@@ -32,5 +30,6 @@ public class Attributes {
   private boolean has_gym;
   private String meal_plan;
   private int stars;
+
 }
 

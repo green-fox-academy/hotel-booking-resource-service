@@ -16,6 +16,11 @@ public class Hotel {
   @GeneratedValue (strategy = GenerationType.AUTO)
   private Long id;
   @OneToOne
-  @JoinColumn (name = "id")
+  @JoinColumn (name = "attribute_id")
   private Attributes attributes;
+
+  public Hotel(String type, Attributes attributes) {
+    this.type = type;
+    this.attributes = attributes;
+  }
 }
