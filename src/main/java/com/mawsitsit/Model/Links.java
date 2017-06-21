@@ -8,5 +8,5 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Links {
-  private String self = "https://booking-resource.herokuapp.com/hotels";
+  private String self;
 }

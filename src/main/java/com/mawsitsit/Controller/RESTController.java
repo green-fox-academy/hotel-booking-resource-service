@@ -62,7 +62,7 @@ public class RESTController {
   @GetMapping("/hotels")
   public HotelList listHotels(HttpServletRequest httpServletRequest) {
     logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
-    return hotelListingService.createList();
+    return hotelListingService.createList(httpServletRequest);
   }
 
   @RequestMapping("/addHotel")

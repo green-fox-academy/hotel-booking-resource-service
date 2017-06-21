@@ -84,17 +84,16 @@ public class RESTControllerTest {
             .andExpect(jsonPath("$.queue").value("ok"));
   }
 
-//  @Test
-//  public void testHotels_withOneEntry() throws Exception {
-//    List returnValue = new ArrayList();
-//    returnValue.add(new HotelContainer("hotel", new Hotel()));
-//    BDDMockito.given(hotelRepository.findAll()).willReturn(returnValue);
-//    mockMvc.perform(get("/hotels"))
-//            .andExpect(status().isOk())
-//            .andExpect(content().contentType(contentType))
-//            .andExpect(jsonPath("$.links.self").value("https://booking-resource.herokuapp.com/hotels"))
-//            .andExpect(jsonPath("$.data[0].type").value("hotel"))
-//            .andExpect(jsonPath("$.data[0].attributes.has_wifi").value(false));
-//
-//  }
+  @Test
+  public void testHotels_withOneEntry() throws Exception {
+    List returnValue = new ArrayList();
+    returnValue.add(new Hotel());
+    BDDMockito.given(hotelRepository.findAll()).willReturn(returnValue);
+    mockMvc.perform(get("/hotels"))
+            .andExpect(status().isOk())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.data[0].type").value("hotel"))
+            .andExpect(jsonPath("$.data[0].attributes.has_wifi").value(false));
+
+  }
 }
