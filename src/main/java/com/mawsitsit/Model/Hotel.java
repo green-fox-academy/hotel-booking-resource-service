@@ -22,7 +22,7 @@ public class Hotel {
   private boolean has_wifi;
   private boolean has_parking;
   private boolean has_pets;
-  private boolean has_restaurants;
+  private boolean has_restaurant;
   private boolean has_bar;
   private boolean has_swimming_pool;
   private boolean has_air_conditioning;

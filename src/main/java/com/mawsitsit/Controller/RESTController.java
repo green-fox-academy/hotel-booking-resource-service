@@ -1,8 +1,6 @@
 package com.mawsitsit.Controller;
 
-import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelList;
-import com.mawsitsit.Model.Status;
+import com.mawsitsit.Model.*;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
 import com.mawsitsit.Service.HotelListingService;
@@ -11,10 +9,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -65,6 +61,19 @@ public class RESTController {
     logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
     return hotelListingService.createList(httpServletRequest, pageable);
   }
+  @ResponseStatus(code = HttpStatus.CREATED)
+  @PostMapping("/hotels")
+  public SingleHotel createHotel(@RequestBody SingleHotel singleHotel, HttpServletRequest request){
+    Hotel hotel = singleHotel.getData().getAttributes();
+    hotelRepository.save(hotel);
+    HotelContainer hotelContainer = singleHotel.getData();
+    hotelContainer.setId(hotel.getId());
+    singleHotel.setData(hotelContainer);
+    Links link = new Links();
+    link.setSelf(request.getRequestURL().toString() + "/" + hotel.getId());
+    singleHotel.setLinks(link);
+    return singleHotel;
+  }
 
   @RequestMapping("/addHotel")
   public void addHotel() {
@@ -73,9 +82,9 @@ public class RESTController {
     }
   }
 
-  @ExceptionHandler(Exception.class)
-  public void badRequest(Exception e) {
-    logger.warn("HTTP-ERROR " + e.getStackTrace()[0].getMethodName());
-  }
+//  @ExceptionHandler(Exception.class)
+//  public void badRequest(Exception e) {
+//    logger.warn("HTTP-ERROR " + e.getStackTrace()[0].getMethodName());
+//  }
 
 }
