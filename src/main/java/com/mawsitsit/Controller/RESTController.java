@@ -61,23 +61,16 @@ public class RESTController {
     logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
     return hotelListingService.createList(httpServletRequest, pageable);
   }
+
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
-  public SingleHotel createHotel(@RequestBody SingleHotel singleHotel, HttpServletRequest request){
-    Hotel hotel = singleHotel.getData().getAttributes();
-    hotelRepository.save(hotel);
-    HotelContainer hotelContainer = singleHotel.getData();
-    hotelContainer.setId(hotel.getId());
-    singleHotel.setData(hotelContainer);
-    Links link = new Links();
-    link.setSelf(request.getRequestURL().toString() + "/" + hotel.getId());
-    singleHotel.setLinks(link);
-    return singleHotel;
+  public SingleHotel createHotel(@RequestBody SingleHotel singleHotel, HttpServletRequest request) {
+    return hotelListingService.addHotel(singleHotel, request);
   }
 
   @RequestMapping("/addHotel")
   public void addHotel() {
-    for (int i = 0 ; i < 200; i++) {
+    for (int i = 0; i < 200; i++) {
       hotelRepository.save(new Hotel());
     }
   }

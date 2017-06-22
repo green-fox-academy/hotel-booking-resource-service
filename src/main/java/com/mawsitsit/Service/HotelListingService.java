@@ -1,9 +1,6 @@
 package com.mawsitsit.Service;
 
-import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
-import com.mawsitsit.Model.HotelList;
-import com.mawsitsit.Model.Links;
+import com.mawsitsit.Model.*;
 import com.mawsitsit.Repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -36,10 +33,23 @@ public class HotelListingService {
     if (page.hasPrevious()) {
       links.setPrev(request.getRequestURL().toString() + "?page=" + (page.getNumber() - 1));
     }
-    if(page.hasNext()) {
+    if (page.hasNext()) {
       links.setNext(request.getRequestURL().toString() + "?page=" + (page.getNumber() + 1));
       links.setLast(request.getRequestURL().toString() + "?page=" + page.getTotalPages());
     }
     return links;
   }
+
+  public SingleHotel addHotel(SingleHotel singleHotel, HttpServletRequest request) {
+    Hotel hotel = singleHotel.getData().getAttributes();
+    hotelRepository.save(hotel);
+    HotelContainer hotelContainer = singleHotel.getData();
+    hotelContainer.setId(hotel.getId());
+    singleHotel.setData(hotelContainer);
+    Links link = new Links();
+    link.setSelf(request.getRequestURL().toString() + "/" + hotel.getId());
+    singleHotel.setLinks(link);
+    return singleHotel;
+  }
 }
+
