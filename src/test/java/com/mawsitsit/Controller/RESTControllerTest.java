@@ -2,7 +2,6 @@ package com.mawsitsit.Controller;
 
 import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
 import com.mawsitsit.Repository.HearthbeatRepository;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
@@ -11,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
 import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -54,9 +52,6 @@ public class RESTControllerTest {
 
   @MockBean
   private HotelRepository hotelRepository;
-
-  @Mock
-  private Page page;
 
   @Autowired
   private WebApplicationContext webApplicationContext;
