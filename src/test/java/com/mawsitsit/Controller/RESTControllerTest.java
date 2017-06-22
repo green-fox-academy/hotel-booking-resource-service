@@ -2,7 +2,6 @@ package com.mawsitsit.Controller;
 
 import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
 import com.mawsitsit.Repository.HearthbeatRepository;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
@@ -10,9 +9,13 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -86,14 +89,17 @@ public class RESTControllerTest {
 
   @Test
   public void testHotels_withOneEntry() throws Exception {
+    contentType = new MediaType(MediaType.APPLICATION_JSON.getType(), "vnd.api+json", Charset.forName
+            ("utf8"));
     List returnValue = new ArrayList();
     returnValue.add(new Hotel());
-    BDDMockito.given(hotelRepository.findAll()).willReturn(returnValue);
+    Page<Hotel> page = new PageImpl<Hotel>(returnValue);
+    BDDMockito.given(hotelRepository.findAll(Matchers.any(Pageable.class))).willReturn(page);
     mockMvc.perform(get("/hotels"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.data[0].type").value("hotel"))
             .andExpect(jsonPath("$.data[0].attributes.has_wifi").value(false));
-
   }
+
 }
