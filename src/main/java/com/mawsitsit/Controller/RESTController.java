@@ -60,7 +60,7 @@ public class RESTController {
     return "String return for testing purposes ";
   }
 
-  @GetMapping("/hotels")
+  @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
   public HotelList listHotels(HttpServletRequest httpServletRequest, Pageable pageable) {
     logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
     return hotelListingService.createList(httpServletRequest, pageable);

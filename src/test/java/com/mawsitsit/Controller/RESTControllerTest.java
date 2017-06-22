@@ -89,6 +89,8 @@ public class RESTControllerTest {
 
   @Test
   public void testHotels_withOneEntry() throws Exception {
+    contentType = new MediaType(MediaType.APPLICATION_JSON.getType(), "vnd.api+json", Charset.forName
+            ("utf8"));
     List returnValue = new ArrayList();
     returnValue.add(new Hotel());
     Page<Hotel> page = new PageImpl<Hotel>(returnValue);
