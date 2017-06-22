@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,5 +15,7 @@ import lombok.Setter;
 public class HotelContainer {
   private String type;
   private Long id;
+  @Valid
+  @NotNull
   private Hotel attributes;
 }

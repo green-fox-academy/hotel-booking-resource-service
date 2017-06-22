@@ -11,7 +11,7 @@ CREATE TABLE hotel (
   "has_wifi" BOOLEAN,
   "has_parking" BOOLEAN,
   "has_pets" BOOLEAN,
-  "has_restaurant" BOOLEAN,
+  "has_restaurants" BOOLEAN,
   "has_bar" BOOLEAN,
   "has_swimming_pool" BOOLEAN,
   "has_air_conditioning" BOOLEAN,

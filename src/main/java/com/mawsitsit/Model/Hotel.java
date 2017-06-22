@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Getter
@@ -16,13 +17,15 @@ public class Hotel {
   @Id
   @GeneratedValue (strategy = GenerationType.AUTO)
   private Long id;
+  @NotNull
   private String location;
   private String name;
   private String main_image_src;
+  @NotNull
   private boolean has_wifi;
   private boolean has_parking;
   private boolean has_pets;
-  private boolean has_restaurant;
+  private boolean has_restaurants;
   private boolean has_bar;
   private boolean has_swimming_pool;
   private boolean has_air_conditioning;

@@ -5,14 +5,17 @@ import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
 import com.mawsitsit.Service.HotelListingService;
 import com.mawsitsit.Service.StatusChecker;
+import com.mawsitsit.Service.Validator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
@@ -64,7 +67,11 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
-  public SingleHotel createHotel(@RequestBody SingleHotel singleHotel, HttpServletRequest request) {
+  public SingleHotel createHotel(@RequestBody @Valid SingleHotel singleHotel, HttpServletRequest request,
+                                 BindingResult bindingResult) {
+    if (bindingResult.hasErrors()){
+      throw new UnsupportedOperationException(Validator.getMissingFields(bindingResult));
+    }
     return hotelListingService.addHotel(singleHotel, request);
   }
 
@@ -75,9 +82,9 @@ public class RESTController {
     }
   }
 
-//  @ExceptionHandler(Exception.class)
-//  public void badRequest(Exception e) {
-//    logger.warn("HTTP-ERROR " + e.getStackTrace()[0].getMethodName());
-//  }
+  @ExceptionHandler(UnsupportedOperationException.class)
+  public void badRequest(Exception e) {
+    logger.warn("HTTP-ERROR " + e.getStackTrace()[0].getMethodName());
+  }
 
 }
