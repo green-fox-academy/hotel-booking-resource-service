@@ -10,9 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.BDDMockito;
+import org.mockito.Matchers;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -49,6 +54,9 @@ public class RESTControllerTest {
 
   @MockBean
   private HotelRepository hotelRepository;
+
+  @Mock
+  private Page page;
 
   @Autowired
   private WebApplicationContext webApplicationContext;
@@ -88,12 +96,13 @@ public class RESTControllerTest {
   public void testHotels_withOneEntry() throws Exception {
     List returnValue = new ArrayList();
     returnValue.add(new Hotel());
-    BDDMockito.given(hotelRepository.findAll()).willReturn(returnValue);
+    Page<Hotel> page = new PageImpl<Hotel>(returnValue);
+    BDDMockito.given(hotelRepository.findAll(Matchers.any(Pageable.class))).willReturn(page);
     mockMvc.perform(get("/hotels"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.data[0].type").value("hotel"))
             .andExpect(jsonPath("$.data[0].attributes.has_wifi").value(false));
-
   }
+
 }
