@@ -71,8 +71,9 @@ public class RESTController {
                                  BindingResult bindingResult) {
     if (bindingResult.hasErrors()){
       throw new UnsupportedOperationException(Validator.getMissingFields(bindingResult));
+    } else {
+      return hotelListingService.addHotel(singleHotel, request);
     }
-    return hotelListingService.addHotel(singleHotel, request);
   }
 
   @RequestMapping("/addHotel")
@@ -82,9 +83,13 @@ public class RESTController {
     }
   }
 
+  @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(UnsupportedOperationException.class)
-  public void badRequest(Exception e) {
+  public BadRequestResponse badRequest(UnsupportedOperationException e) {
     logger.warn("HTTP-ERROR " + e.getStackTrace()[0].getMethodName());
+    BadRequestResponse badRequestResponse = new BadRequestResponse();
+    badRequestResponse.addError(new ErrorMessage(400, "Bad Request", String.format("The attribute fields: %s are missing.", e.getMessage())));
+    return badRequestResponse;
   }
 
 }
