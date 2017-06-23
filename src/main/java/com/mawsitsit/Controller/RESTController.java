@@ -67,7 +67,7 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
-  public SingleHotel createHotel(@RequestBody @Valid SingleHotel singleHotel, HttpServletRequest request){
+  public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
     logger.info(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
     return hotelListingService.addHotel(singleHotel, request);
     }
