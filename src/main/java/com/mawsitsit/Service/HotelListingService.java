@@ -29,13 +29,18 @@ public class HotelListingService {
 
   public Links linkBuilder(HttpServletRequest request, Page page) {
     Links links = new Links();
-    links.setSelf(request.getRequestURL().toString());
     if (page.hasPrevious()) {
-      links.setPrev(request.getRequestURL().toString() + "?page=" + (page.getNumber() - 1));
+      links.setSelf(request.getRequestURL().toString() + "?" + request.getQueryString());
+      links.setPrev(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+              (page.getNumber()), String.valueOf(page.getNumber()-1)));
+    } else {
+      links.setSelf(request.getRequestURL().toString());
     }
     if (page.hasNext()) {
-      links.setNext(request.getRequestURL().toString() + "?page=" + (page.getNumber() + 1));
-      links.setLast(request.getRequestURL().toString() + "?page=" + page.getTotalPages());
+      links.setNext(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+              (page.getNumber()), String.valueOf(page.getNumber()+1)));
+      links.setLast(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+              (page.getNumber()), String.valueOf(page.getTotalPages())));
     }
     return links;
   }
