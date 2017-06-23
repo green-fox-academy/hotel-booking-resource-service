@@ -5,7 +5,7 @@
         <target>System.out</target>
         <filter class="com.mawsitsit.Service.StdOutFilter" />
         <encoder>
-            <pattern>%d{ISO8601} %-5level %logger{5} booking-resource.herokuapp.com %msg%n</pattern>
+            <pattern>%-5level %d{ISO8601} %msg%n</pattern>
         </encoder>
     </appender>
 
@@ -13,11 +13,16 @@
         <target>System.err</target>
         <filter class="com.mawsitsit.Service.ErrOutFilter" />
         <encoder>
-            <pattern>%d{ISO8601} %-5level %logger{5} booking-resource.herokuapp.com %msg%n</pattern>
+            <pattern>%-5level %d{ISO8601} %msg%n</pattern>
         </encoder>
     </appender>
 
-    <root level="${LOG_LEVEL}">
+    <logger name="org.springframework" level="${LOG_LEVEL}" additivity="false">
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="STDERR" />
+    </logger>
+
+    <root level="INFO">
         <appender-ref ref="STDOUT" />
         <appender-ref ref="STDERR" />
     </root>

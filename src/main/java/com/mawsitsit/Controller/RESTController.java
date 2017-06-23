@@ -38,8 +38,8 @@ public class RESTController {
   private Logger logger = LoggerFactory.getLogger(RESTController.class);
 
   @GetMapping("/heartbeat")
-  public Status checkApp(HttpServletRequest httpServletRequest) throws IOException, TimeoutException {
-    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
+  public Status checkApp(HttpServletRequest request) throws IOException, TimeoutException {
+    logger.info(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
     return statusChecker.serviceStatus();
   }
 
@@ -60,21 +60,17 @@ public class RESTController {
   }
 
   @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
-  public HotelList listHotels(HttpServletRequest httpServletRequest, Pageable pageable) {
-    logger.info("HTTP-REQUEST " + httpServletRequest.getRequestURI());
-    return hotelListingService.createList(httpServletRequest, pageable);
+  public HotelList listHotels(HttpServletRequest request, Pageable pageable) {
+    logger.info(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
+    return hotelListingService.createList(request, pageable);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
-  public SingleHotel createHotel(@RequestBody @Valid SingleHotel singleHotel, HttpServletRequest request,
-                                 BindingResult bindingResult) {
-    if (bindingResult.hasErrors()){
-      throw new UnsupportedOperationException(Validator.getMissingFields(bindingResult));
-    } else {
-      return hotelListingService.addHotel(singleHotel, request);
+  public SingleHotel createHotel(@RequestBody @Valid SingleHotel singleHotel, HttpServletRequest request){
+    logger.info(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
+    return hotelListingService.addHotel(singleHotel, request);
     }
-  }
 
   @RequestMapping("/addHotel")
   public void addHotel() {
@@ -85,8 +81,8 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(UnsupportedOperationException.class)
-  public BadRequestResponse badRequest(UnsupportedOperationException e) {
-    logger.warn("HTTP-ERROR " + e.getStackTrace()[0].getMethodName());
+  public BadRequestResponse badRequest(UnsupportedOperationException e, HttpServletRequest request) {
+    logger.warn(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
     BadRequestResponse badRequestResponse = new BadRequestResponse();
     badRequestResponse.addError(new ErrorMessage(400, "Bad Request", String.format("The attribute fields: %s are missing.", e.getMessage())));
     return badRequestResponse;
