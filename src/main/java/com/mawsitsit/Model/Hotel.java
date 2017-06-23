@@ -19,18 +19,29 @@ public class Hotel {
   private Long id;
   @NotNull
   private String location;
+  @NotNull
   private String name;
+  @NotNull
   private String main_image_src;
   @NotNull
-  private boolean has_wifi;
-  private boolean has_parking;
-  private boolean has_pets;
-  private boolean has_restaurants;
-  private boolean has_bar;
-  private boolean has_swimming_pool;
-  private boolean has_air_conditioning;
-  private boolean has_gym;
+  private Boolean has_wifi;
+  @NotNull
+  private Boolean has_parking;
+  @NotNull
+  private Boolean has_pets;
+  @NotNull
+  private Boolean has_restaurants;
+  @NotNull
+  private Boolean has_bar;
+  @NotNull
+  private Boolean has_swimming_pool;
+  @NotNull
+  private Boolean has_air_conditioning;
+  @NotNull
+  private Boolean has_gym;
+  @NotNull
   private String meal_plan;
-  private int stars;
+  @NotNull
+  private Integer stars;
 }
 

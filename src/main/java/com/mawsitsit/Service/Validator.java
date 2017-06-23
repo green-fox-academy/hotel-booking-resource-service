@@ -7,7 +7,7 @@ public class Validator {
   public static String getMissingFields(BindingResult bindingResult) {
     StringBuilder missingFields = new StringBuilder();
     for (FieldError error : bindingResult.getFieldErrors()) {
-      missingFields.append(error.getField());
+      missingFields.append("\"").append(error.getField().substring(error.getField().lastIndexOf(".")+1)).append("\"");
       if (bindingResult.getFieldErrors().indexOf(error) < bindingResult.getFieldErrors().size() - 1) {
         missingFields.append(", ");
       }

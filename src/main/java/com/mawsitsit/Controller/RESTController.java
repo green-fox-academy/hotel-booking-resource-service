@@ -1,6 +1,7 @@
 package com.mawsitsit.Controller;
 
 import com.mawsitsit.Model.*;
+import com.mawsitsit.Model.Error;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
 import com.mawsitsit.Service.HotelListingService;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,7 @@ public class RESTController {
 
   @GetMapping("/heartbeat")
   public Status checkApp(HttpServletRequest request) throws IOException, TimeoutException {
-    logger.info(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
+    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
     return statusChecker.serviceStatus();
   }
 
@@ -61,14 +62,14 @@ public class RESTController {
 
   @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
   public HotelList listHotels(HttpServletRequest request, Pageable pageable) {
-    logger.info(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
+    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
     return hotelListingService.createList(request, pageable);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
   public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
-    logger.info(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
+    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
     return hotelListingService.addHotel(singleHotel, request);
     }
 
@@ -80,12 +81,13 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
-  @ExceptionHandler(UnsupportedOperationException.class)
-  public BadRequestResponse badRequest(UnsupportedOperationException e, HttpServletRequest request) {
-    logger.warn(request.getQueryString() + " HTTP-REQUEST " + request.getRequestURI());
-    BadRequestResponse badRequestResponse = new BadRequestResponse();
-    badRequestResponse.addError(new ErrorMessage(400, "Bad Request", String.format("The attribute fields: %s are missing.", e.getMessage())));
-    return badRequestResponse;
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  public Response badRequest(MethodArgumentNotValidException e, HttpServletRequest request) {
+    logger.warn(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
+    Response response = new Response();
+    response.addError(new Error(400, "Bad Request", String.format("The attribute fields: %s are missing.",
+            Validator.getMissingFields(e.getBindingResult()))));
+    return response;
   }
 
 }
