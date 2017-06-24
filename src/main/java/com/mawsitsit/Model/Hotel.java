@@ -30,7 +30,7 @@ public class Hotel {
   @NotNull
   private Boolean has_pets;
   @NotNull
-  private Boolean has_restaurants;
+  private Boolean has_restaurant;
   @NotNull
   private Boolean has_bar;
   @NotNull

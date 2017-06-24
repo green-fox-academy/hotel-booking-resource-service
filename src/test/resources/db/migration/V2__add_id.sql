@@ -1,2 +1,0 @@
-ALTER TABLE hearthbeat
-    ADD id INT AUTO_INCREMENT;
