@@ -37,10 +37,22 @@ public class HotelListingService {
       links.setSelf(request.getRequestURL().toString());
     }
     if (page.hasNext()) {
-      links.setNext(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
-              (page.getNumber()), String.valueOf(page.getNumber()+1)));
-      links.setLast(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
-              (page.getNumber()), String.valueOf(page.getTotalPages())));
+      if (request.getQueryString() == null) {
+        links.setNext(request.getRequestURL().toString() + "?page=" + (page.getNumber() + 1));
+        links.setLast(request.getRequestURL().toString() + "?page=" + (page.getTotalPages() - 1));
+      } else if (request.getQueryString().contains("page")) {
+        links.setNext(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+                (page.getNumber()), String.valueOf(page.getNumber() + 1)));
+        links.setLast(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+                (page.getNumber()), String.valueOf(page.getTotalPages() - 1)));
+      } else {
+        links.setNext(request.getRequestURL().toString() + "?page=" + (page.getNumber() + 1) + "&" + request
+                .getQueryString
+                ());
+        links.setLast(request.getRequestURL().toString() + "?page=" + (page.getTotalPages() - 1) + "&" + request
+                .getQueryString
+                ());
+      }
     }
     return links;
   }
