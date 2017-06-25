@@ -17,10 +17,10 @@ public class HotelListingService {
   @Autowired
   private HotelRepository hotelRepository;
 
-  public HotelList createList(HttpServletRequest request, Pageable pageable) {
+  public HotelList<List<HotelContainer>> createList(HttpServletRequest request, Pageable pageable) {
     Page page = hotelRepository.findAll(pageable);
     List<Hotel> hotels = page.getContent();
-    List hotelContainers = new ArrayList();
+    List<HotelContainer> hotelContainers = new ArrayList();
     for (Hotel hotel : hotels) {
       hotelContainers.add(new HotelContainer("hotel", hotel.getId(), hotel));
     }
