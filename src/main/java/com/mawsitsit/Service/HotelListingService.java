@@ -29,29 +29,28 @@ public class HotelListingService {
 
   public Links linkBuilder(HttpServletRequest request, Page page) {
     Links links = new Links();
+    String requestURL = request.getRequestURL().toString();
+    String query = request.getQueryString();
+
     if (page.hasPrevious()) {
-      links.setSelf(request.getRequestURL().toString() + "?" + request.getQueryString());
-      links.setPrev(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+      links.setSelf(requestURL + "?" + query);
+      links.setPrev(requestURL + "?" + query.replaceFirst(String.valueOf
               (page.getNumber()), String.valueOf(page.getNumber()-1)));
     } else {
-      links.setSelf(request.getRequestURL().toString());
+      links.setSelf(requestURL);
     }
     if (page.hasNext()) {
-      if (request.getQueryString() == null) {
-        links.setNext(request.getRequestURL().toString() + "?page=" + (page.getNumber() + 1));
-        links.setLast(request.getRequestURL().toString() + "?page=" + (page.getTotalPages() - 1));
-      } else if (request.getQueryString().contains("page")) {
-        links.setNext(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+      if (query == null) {
+        links.setNext(requestURL + "?page=" + (page.getNumber() + 1));
+        links.setLast(requestURL + "?page=" + (page.getTotalPages() - 1));
+      } else if (query.contains("page")) {
+        links.setNext(requestURL + "?" + query.replaceFirst(String.valueOf
                 (page.getNumber()), String.valueOf(page.getNumber() + 1)));
-        links.setLast(request.getRequestURL().toString() + "?" + request.getQueryString().replaceFirst(String.valueOf
+        links.setLast(requestURL + "?" + query.replaceFirst(String.valueOf
                 (page.getNumber()), String.valueOf(page.getTotalPages() - 1)));
       } else {
-        links.setNext(request.getRequestURL().toString() + "?page=" + (page.getNumber() + 1) + "&" + request
-                .getQueryString
-                ());
-        links.setLast(request.getRequestURL().toString() + "?page=" + (page.getTotalPages() - 1) + "&" + request
-                .getQueryString
-                ());
+        links.setNext(requestURL + "?page=" + (page.getNumber() + 1) + "&" + query);
+        links.setLast(requestURL + "?page=" + (page.getTotalPages() - 1) + "&" + query);
       }
     }
     return links;
