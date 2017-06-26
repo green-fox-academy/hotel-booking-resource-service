@@ -31,26 +31,28 @@ public class HotelListingService {
     Links links = new Links();
     String requestURL = request.getRequestURL().toString();
     String query = request.getQueryString();
+    int pageNumber = page.getNumber();
+    int totalPage = page.getTotalPages();
 
     if (page.hasPrevious()) {
       links.setSelf(requestURL + "?" + query);
       links.setPrev(requestURL + "?" + query.replaceFirst(String.valueOf
-              (page.getNumber()), String.valueOf(page.getNumber()-1)));
+              (pageNumber), String.valueOf(pageNumber-1)));
     } else {
       links.setSelf(requestURL);
     }
     if (page.hasNext()) {
       if (query == null) {
-        links.setNext(requestURL + "?page=" + (page.getNumber() + 1));
-        links.setLast(requestURL + "?page=" + (page.getTotalPages() - 1));
+        links.setNext(requestURL + "?page=" + (pageNumber + 1));
+        links.setLast(requestURL + "?page=" + (totalPage - 1));
       } else if (query.contains("page")) {
         links.setNext(requestURL + "?" + query.replaceFirst(String.valueOf
-                (page.getNumber()), String.valueOf(page.getNumber() + 1)));
+                (pageNumber), String.valueOf(pageNumber + 1)));
         links.setLast(requestURL + "?" + query.replaceFirst(String.valueOf
-                (page.getNumber()), String.valueOf(page.getTotalPages() - 1)));
+                (pageNumber), String.valueOf(totalPage - 1)));
       } else {
-        links.setNext(requestURL + "?page=" + (page.getNumber() + 1) + "&" + query);
-        links.setLast(requestURL + "?page=" + (page.getTotalPages() - 1) + "&" + query);
+        links.setNext(requestURL + "?page=" + (pageNumber + 1) + "&" + query);
+        links.setLast(requestURL + "?page=" + (totalPage - 1) + "&" + query);
       }
     }
     return links;
