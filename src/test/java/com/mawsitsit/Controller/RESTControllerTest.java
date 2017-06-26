@@ -92,14 +92,17 @@ public class RESTControllerTest {
     contentType = new MediaType(MediaType.APPLICATION_JSON.getType(), "vnd.api+json", Charset.forName
             ("utf8"));
     List returnValue = new ArrayList();
-    returnValue.add(new Hotel());
+    Hotel hotel = new Hotel();
+    hotel.setHas_wifi(false);
+    returnValue.add(hotel);
     Page<Hotel> page = new PageImpl<Hotel>(returnValue);
     BDDMockito.given(hotelRepository.findAll(Matchers.any(Pageable.class))).willReturn(page);
     mockMvc.perform(get("/hotels"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.links.self").exists())
+            .andExpect(jsonPath("$.links.next").doesNotExist())
             .andExpect(jsonPath("$.data[0].type").value("hotel"))
             .andExpect(jsonPath("$.data[0].attributes.has_wifi").value(false));
   }
-
 }

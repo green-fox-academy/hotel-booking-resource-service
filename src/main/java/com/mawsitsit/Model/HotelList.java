@@ -5,13 +5,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelList {
+public class HotelList<T> {
   private Links links;
-  private List<HotelContainer> data;
+  @Valid
+  @NotNull
+  private T data;
 }
