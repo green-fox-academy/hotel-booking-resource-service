@@ -39,7 +39,11 @@ public class HotelListingService {
       links.setPrev(requestURL + "?" + query.replaceFirst(String.valueOf
               (pageNumber), String.valueOf(pageNumber-1)));
     } else {
-      links.setSelf(requestURL);
+      if (query == null) {
+        links.setSelf(requestURL);
+      } else {
+        links.setSelf(requestURL + "?" + query);
+      }
     }
     if (page.hasNext()) {
       if (query == null) {
