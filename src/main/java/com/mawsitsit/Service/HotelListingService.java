@@ -62,7 +62,7 @@ public class HotelListingService {
     return links;
   }
 
-  public HotelList addHotel(HotelList<HotelContainer> singleHotel, HttpServletRequest request) {
+  public HotelList<HotelContainer> addHotel(HotelList<HotelContainer> singleHotel, HttpServletRequest request) {
     Hotel hotel = singleHotel.getData().getAttributes();
     hotelRepository.save(hotel);
     HotelContainer hotelContainer = singleHotel.getData();
