@@ -40,7 +40,7 @@ public class RESTController {
 
   @GetMapping("/heartbeat")
   public Status checkApp(HttpServletRequest request) throws IOException, TimeoutException {
-    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
+//    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
     return statusChecker.serviceStatus();
   }
 
