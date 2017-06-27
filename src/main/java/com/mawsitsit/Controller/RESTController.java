@@ -7,8 +7,6 @@ import com.mawsitsit.Service.MessageHandler;
 import com.mawsitsit.Service.HotelListingService;
 import com.mawsitsit.Service.StatusChecker;
 import com.mawsitsit.Service.Validator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -36,11 +34,9 @@ public class RESTController {
   @Autowired
   private HotelRepository hotelRepository;
 
-  private Logger logger = LoggerFactory.getLogger(RESTController.class);
 
   @GetMapping("/heartbeat")
-  public Status checkApp(HttpServletRequest request) throws IOException, TimeoutException {
-    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
+  public Status checkApp() throws IOException, TimeoutException {
     return statusChecker.serviceStatus();
   }
 
@@ -61,15 +57,13 @@ public class RESTController {
   }
 
   @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
-  public HotelList listHotels(HttpServletRequest request, Pageable pageable) {
-    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
+  public HotelList listHotels(Pageable pageable, HttpServletRequest request) {
     return hotelListingService.createList(request, pageable);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
   public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
-    logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
     return hotelListingService.addHotel(singleHotel, request);
     }
 
@@ -82,8 +76,7 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public Response badRequest(MethodArgumentNotValidException e, HttpServletRequest request) {
-    logger.warn(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
+  public Response badRequest(MethodArgumentNotValidException e) {
     Response response = new Response();
     response.addError(new Error(400, "Bad Request", String.format("The attribute fields: %s are missing.",
             Validator.getMissingFields(e.getBindingResult()))));
