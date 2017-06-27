@@ -55,7 +55,7 @@ public class RESTController {
 
   @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
   public HotelList listHotels(Pageable pageable, HttpServletRequest request) {
-    return hotelListingService.createList(request, pageable);
+    return hotelListingService.createList(request, hotelListingService.query(pageable));
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)

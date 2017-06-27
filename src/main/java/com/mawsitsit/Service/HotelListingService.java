@@ -17,8 +17,7 @@ public class HotelListingService {
   @Autowired
   private HotelRepository hotelRepository;
 
-  public HotelList<List<HotelContainer>> createList(HttpServletRequest request, Pageable pageable) {
-    Page page = hotelRepository.findAll(pageable);
+  public HotelList<List<HotelContainer>> createList(HttpServletRequest request, Page page) {
     List<Hotel> hotels = page.getContent();
     List<HotelContainer> hotelContainers = new ArrayList();
     for (Hotel hotel : hotels) {
@@ -72,6 +71,10 @@ public class HotelListingService {
     link.setSelf(request.getRequestURL().toString() + "/" + hotel.getId());
     singleHotel.setLinks(link);
     return singleHotel;
+  }
+
+  public Page query(Pageable pageable) {
+    return hotelRepository.findAll(pageable);
   }
 }
 
