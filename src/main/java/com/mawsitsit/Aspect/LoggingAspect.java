@@ -15,9 +15,14 @@ public class LoggingAspect {
 
   private Logger logger = LoggerFactory.getLogger(RESTController.class);
 
-@AfterReturning("execution(* com.mawsitsit.Controller.RESTController..*(..)) && args(request)")
+@AfterReturning("execution(* com.mawsitsit.Controller.RESTController..*(..)) && args(.., request)")
   public void loggingAdvice(HttpServletRequest request) {
     logger.info(request.getServerName() + " HTTP-REQUEST " + request.getRequestURI());
-}
+  }
+
+@AfterReturning("execution(@org.springframework.web.bind.annotation.ExceptionHandler * *(..)) && args(.., request)")
+  public void loggingExceptionAdvice(HttpServletRequest request) {
+    logger.warn(request.getServerName() + " HTTP-ERROR " + request.getRequestURI());
+  }
 
 }
