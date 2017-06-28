@@ -37,7 +37,7 @@ public class RESTController {
 
 
   @GetMapping("/heartbeat")
-  public Status checkApp() throws IOException, TimeoutException {
+  public Status checkApp(HttpServletRequest request) throws IOException, TimeoutException {
     return statusChecker.serviceStatus();
   }
 
@@ -98,5 +98,4 @@ public class RESTController {
             e.getMessage())));
     return response;
   }
-
 }
