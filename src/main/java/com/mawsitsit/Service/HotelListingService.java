@@ -3,6 +3,7 @@ package com.mawsitsit.Service;
 import com.mawsitsit.Model.*;
 import com.mawsitsit.Repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -75,10 +76,10 @@ public class HotelListingService {
     return singleHotel;
   }
 
-  public HotelList<HotelContainer> getHotel(Long id, HttpServletRequest request) throws EntityNotFoundException {
+  public HotelList<HotelContainer> getHotel(Long id, HttpServletRequest request) throws EmptyResultDataAccessException {
     Hotel hotel = hotelRepository.findOne(id);
     if (hotel == null) {
-      throw new EntityNotFoundException(id.toString());
+      throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
     HotelContainer container = new HotelContainer("hotel", id, hotel);
     Links link = new Links();
@@ -90,7 +91,7 @@ public class HotelListingService {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 
-  public void deleteHotel(Long id) {
+  public void deleteHotel(Long id) throws Exception{
     hotelRepository.delete(id);
   }
 }

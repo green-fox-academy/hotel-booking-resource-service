@@ -5,6 +5,7 @@ import com.mawsitsit.Model.Error;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -74,7 +75,7 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.OK)
   @DeleteMapping("/hotels/{id}")
-  public void deleteHotel(@PathVariable Long id, HttpServletRequest request) {
+  public void deleteHotel(@PathVariable Long id, HttpServletRequest request) throws Exception {
     hotelListingService.deleteHotel(id);
   }
 
@@ -101,8 +102,8 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.NOT_FOUND)
-  @ExceptionHandler(EntityNotFoundException.class)
-  public Response notFound(EntityNotFoundException e, HttpServletRequest request) {
+  @ExceptionHandler(EmptyResultDataAccessException.class)
+  public Response notFound(EmptyResultDataAccessException e, HttpServletRequest request) {
     Response response = new Response();
     response.addError(new Error(404, "Not Found", String.format("No hotel found by id: %s",
             e.getMessage())));
