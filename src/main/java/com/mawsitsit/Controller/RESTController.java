@@ -72,6 +72,11 @@ public class RESTController {
      return hotelListingService.getHotel(id, request);
   }
 
+  @ResponseStatus(code = HttpStatus.OK)
+  @DeleteMapping("/hotels/{id}")
+  public void deleteHotel(@PathVariable Long id, HttpServletRequest request) {
+  }
+
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
   public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
