@@ -34,5 +34,5 @@ dependencies {
 	runtime('org.postgresql:postgresql')
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
-	compile group: 'com.h2database', name: 'h2', version: '1.4.196'
+	testCompile group: 'com.h2database', name: 'h2', version: '1.4.196'
 }
