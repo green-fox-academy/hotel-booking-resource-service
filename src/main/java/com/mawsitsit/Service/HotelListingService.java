@@ -84,9 +84,13 @@ public class HotelListingService {
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     return new HotelList<HotelContainer>(link, container);
+  }
 
   public Page query(Specification<Hotel> specs, Pageable pageable) {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
-}
 
+  public void deleteHotel(Long id) {
+    hotelRepository.delete(id);
+  }
+}

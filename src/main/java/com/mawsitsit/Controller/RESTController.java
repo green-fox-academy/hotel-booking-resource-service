@@ -75,6 +75,7 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.OK)
   @DeleteMapping("/hotels/{id}")
   public void deleteHotel(@PathVariable Long id, HttpServletRequest request) {
+    hotelListingService.deleteHotel(id);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
