@@ -19,7 +19,6 @@ public class MessageHandler {
 
   MessageHandler() throws IOException, TimeoutException, NoSuchAlgorithmException, KeyManagementException, URISyntaxException {
     ConnectionFactory connectionFactory = new ConnectionFactory();
-    connectionFactory.setUri(System.getenv("AMQP_URI"));
     connection = connectionFactory.newConnection();
     channel = connection.createChannel();
     channel.queueDeclare("heartbeat", true, false, false, null);

@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 @RestController
@@ -30,6 +32,9 @@ public class RESTController {
 
   @Autowired
   private HotelRepository hotelRepository;
+
+  @Autowired
+  private ParameterHandler parameterHandler;
 
 
   @GetMapping("/heartbeat")
@@ -54,8 +59,10 @@ public class RESTController {
   }
 
   @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
-  public HotelList listHotels(Pageable pageable, HttpServletRequest request) {
-    return hotelListingService.createList(request, hotelListingService.query(pageable));
+  public HotelList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
+                                  HttpServletRequest request) {
+    return hotelListingService.createList(request, hotelListingService.query(parameterHandler.getParameters
+                    (allRequestParams), pageable));
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
