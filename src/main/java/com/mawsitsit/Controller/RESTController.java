@@ -38,7 +38,7 @@ public class RESTController {
 
 
   @GetMapping("/heartbeat")
-  public Status checkApp() throws IOException, TimeoutException {
+  public Status checkApp(HttpServletRequest request) throws IOException, TimeoutException {
     return statusChecker.serviceStatus();
   }
 
@@ -80,7 +80,7 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
-  public Response badRequest(MethodArgumentNotValidException e) {
+  public Response badRequest(MethodArgumentNotValidException e, HttpServletRequest request) {
     Response response = new Response();
     response.addError(new Error(400, "Bad Request", String.format("The attribute fields: %s are missing.",
             Validator.getMissingFields(e.getBindingResult()))));
