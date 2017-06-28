@@ -61,6 +61,14 @@ public class RESTController {
     return hotelListingService.createList(request, pageable);
   }
 
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/hotels/{id}")
+  public HotelList singleCheckout(@PathVariable Long id) {
+     HotelList hotelList = new HotelList();
+     hotelList.setData(hotelRepository.findHotelByIdEquals(id));
+     return hotelList;
+  }
+
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
   public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
