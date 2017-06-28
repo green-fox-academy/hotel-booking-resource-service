@@ -44,23 +44,12 @@ public class RESTController {
     return statusChecker.serviceStatus();
   }
 
-  @RequestMapping("/count")
-  public Integer count() throws IOException {
-    return messageHandler.getCount();
-  }
-
-  @RequestMapping("/purge")
-  public Integer purge() throws IOException {
-    messageHandler.emptyQueue();
-    return messageHandler.getCount();
-  }
-
   @RequestMapping({"/", "/index"})
   public String main() {
     return "String return for testing purposes ";
   }
 
-  @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
+  @GetMapping(value = "/api/hotels", produces = "application/vnd.api+json")
   public HotelList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
                                   HttpServletRequest request) {
     return hotelListingService.createList(request, hotelListingService.query(parameterHandler.getParameters
@@ -68,29 +57,22 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.OK)
-  @GetMapping("/hotels/{id}")
+  @GetMapping("/api/hotels/{id}")
   public HotelList singleCheckout(@PathVariable Long id, HttpServletRequest request) {
      return hotelListingService.getHotel(id, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
-  @DeleteMapping("/hotels/{id}")
+  @DeleteMapping("/api/hotels/{id}")
   public void deleteHotel(@PathVariable Long id, HttpServletRequest request) throws Exception {
     hotelListingService.deleteHotel(id);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
-  @PostMapping("/hotels")
+  @PostMapping("/api/hotels")
   public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
     return hotelListingService.addHotel(singleHotel, request);
     }
-
-  @RequestMapping("/addHotel")
-  public void addHotel() {
-    for (int i = 0; i < 200; i++) {
-      hotelRepository.save(new Hotel());
-    }
-  }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -104,9 +86,10 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.NOT_FOUND)
   @ExceptionHandler(EmptyResultDataAccessException.class)
   public Response notFound(EmptyResultDataAccessException e, HttpServletRequest request) {
+    String requestUri = request.getRequestURI();
     Response response = new Response();
     response.addError(new Error(404, "Not Found", String.format("No hotel found by id: %s",
-            e.getMessage())));
+            requestUri.substring(requestUri.lastIndexOf('/')+1))));
     return response;
   }
 }
