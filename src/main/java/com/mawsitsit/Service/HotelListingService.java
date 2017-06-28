@@ -5,6 +5,7 @@ import com.mawsitsit.Repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -18,8 +19,7 @@ public class HotelListingService {
   @Autowired
   private HotelRepository hotelRepository;
 
-  public HotelList<List<HotelContainer>> createList(HttpServletRequest request, Pageable pageable) {
-    Page page = hotelRepository.findAll(pageable);
+  public HotelList<List<HotelContainer>> createList(HttpServletRequest request, Page page) {
     List<Hotel> hotels = page.getContent();
     List<HotelContainer> hotelContainers = new ArrayList();
     for (Hotel hotel : hotels) {
@@ -84,6 +84,9 @@ public class HotelListingService {
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     return new HotelList<HotelContainer>(link, container);
+
+  public Page query(Specification<Hotel> specs, Pageable pageable) {
+    return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 }
 

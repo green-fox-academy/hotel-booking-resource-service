@@ -3,10 +3,7 @@ package com.mawsitsit.Controller;
 import com.mawsitsit.Model.*;
 import com.mawsitsit.Model.Error;
 import com.mawsitsit.Repository.HotelRepository;
-import com.mawsitsit.Service.MessageHandler;
-import com.mawsitsit.Service.HotelListingService;
-import com.mawsitsit.Service.StatusChecker;
-import com.mawsitsit.Service.Validator;
+import com.mawsitsit.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -17,6 +14,8 @@ import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 @RestController
@@ -34,6 +33,9 @@ public class RESTController {
 
   @Autowired
   private HotelRepository hotelRepository;
+
+  @Autowired
+  private ParameterHandler parameterHandler;
 
 
   @GetMapping("/heartbeat")
@@ -58,8 +60,10 @@ public class RESTController {
   }
 
   @GetMapping(value = "/hotels", produces = "application/vnd.api+json")
-  public HotelList listHotels(Pageable pageable, HttpServletRequest request) {
-    return hotelListingService.createList(request, pageable);
+  public HotelList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
+                                  HttpServletRequest request) {
+    return hotelListingService.createList(request, hotelListingService.query(parameterHandler.getParameters
+                    (allRequestParams), pageable));
   }
 
   @ResponseStatus(code = HttpStatus.OK)

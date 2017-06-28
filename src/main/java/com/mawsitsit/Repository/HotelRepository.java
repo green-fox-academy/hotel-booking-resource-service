@@ -1,10 +1,10 @@
 package com.mawsitsit.Repository;
 
 import com.mawsitsit.Model.Hotel;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface HotelRepository extends PagingAndSortingRepository<Hotel, Long> {
-  Hotel findHotelByIdEquals(Long id);
+public interface HotelRepository extends PagingAndSortingRepository<Hotel, Long>, JpaSpecificationExecutor<Hotel> {
 }

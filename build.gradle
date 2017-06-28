@@ -22,6 +22,9 @@ repositories {
 }
 
 dependencies {
+	compile group: 'org.aspectj', name: 'aspectjrt', version: '1.8.10'
+	compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.10'
+	compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
 	compile group: 'com.rabbitmq', name: 'amqp-client', version: '4.1.1'
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
@@ -32,7 +35,4 @@ dependencies {
 	compileOnly('org.projectlombok:lombok')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
 	testCompile group: 'com.h2database', name: 'h2', version: '1.4.196'
-	compile group: 'org.aspectj', name: 'aspectjrt', version: '1.8.10'
-	compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.10'
-	compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
 }
