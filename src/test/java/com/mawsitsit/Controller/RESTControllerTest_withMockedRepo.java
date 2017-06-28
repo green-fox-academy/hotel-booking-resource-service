@@ -41,7 +41,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest(classes = BookingresourceApplication.class)
 @WebAppConfiguration
 @EnableWebMvc
-public class RESTControllerTest {
+public class RESTControllerTest_withMockedRepo {
   private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
           MediaType.APPLICATION_JSON.getSubtype(),
           Charset.forName("utf8"));
