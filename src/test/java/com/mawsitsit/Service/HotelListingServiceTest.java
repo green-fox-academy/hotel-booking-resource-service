@@ -117,7 +117,7 @@ public class HotelListingServiceTest {
             (), true);
   }
 
-  public static Hotel initHotel() {
+  public Hotel initHotel() {
     Hotel hotel = new Hotel();
     hotel.setLocation("location");
     hotel.setName("name");

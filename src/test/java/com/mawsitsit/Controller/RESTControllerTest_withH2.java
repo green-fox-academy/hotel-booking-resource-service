@@ -43,13 +43,13 @@ public class RESTControllerTest_withH2 {
   @Before
   public void setUp() throws Exception {
     this.mockMvc = webAppContextSetup(webApplicationContext).build();
-    Hotel hotel1 = HotelListingServiceTest.initHotel();
-    Hotel hotel2 = HotelListingServiceTest.initHotel();
+    Hotel hotel1 = initHotel();
+    Hotel hotel2 = initHotel();
     hotel2.setStars(4);
-    Hotel hotel3 = HotelListingServiceTest.initHotel();
+    Hotel hotel3 = initHotel();
     hotel3.setStars(4);
     hotel3.setHas_swimming_pool(false);
-    Hotel hotel4 = HotelListingServiceTest.initHotel();
+    Hotel hotel4 = initHotel();
     hotel4.setStars(4);
     hotel4.setHas_swimming_pool(false);
     hotelRepository.save(hotel1);
@@ -72,5 +72,23 @@ public class RESTControllerTest_withH2 {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[1]").exists())
             .andExpect(jsonPath("$.data[2]").doesNotExist());
+  }
+
+  public Hotel initHotel() {
+    Hotel hotel = new Hotel();
+    hotel.setLocation("location");
+    hotel.setName("name");
+    hotel.setMain_image_src("src");
+    hotel.setHas_wifi(true);
+    hotel.setHas_parking(true);
+    hotel.setHas_pets(true);
+    hotel.setHas_restaurant(false);
+    hotel.setHas_bar(true);
+    hotel.setHas_swimming_pool(true);
+    hotel.setHas_air_conditioning(true);
+    hotel.setHas_gym(true);
+    hotel.setMeal_plan("mealplan");
+    hotel.setStars(5);
+    return hotel;
   }
 }
