@@ -53,7 +53,7 @@ public class RESTControllerTest_withH2 {
 
   @Test
   public void testHotels_withOneFilterParam() throws Exception {
-    mockMvc.perform(get("/hotels?stars=4"))
+    mockMvc.perform(get("/api/hotels?stars=4"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[2]").exists())
             .andExpect(jsonPath("$.data[3]").doesNotExist());
@@ -61,7 +61,7 @@ public class RESTControllerTest_withH2 {
 
   @Test
   public void testHotels_withTwoFilterParams() throws Exception {
-    mockMvc.perform(get("/hotels?stars=4&has_swimming_pool=true"))
+    mockMvc.perform(get("/api/hotels?stars=4&has_swimming_pool=true"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[1]").exists())
             .andExpect(jsonPath("$.data[2]").doesNotExist());
