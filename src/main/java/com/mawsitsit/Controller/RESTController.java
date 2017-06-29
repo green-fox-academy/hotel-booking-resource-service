@@ -2,7 +2,6 @@ package com.mawsitsit.Controller;
 
 import com.mawsitsit.Model.*;
 import com.mawsitsit.Model.Error;
-import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -11,12 +10,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.LinkedHashMap;
-import java.util.Map;
 import java.util.concurrent.TimeoutException;
 
 @RestController
@@ -27,13 +24,7 @@ public class RESTController {
   StatusChecker statusChecker;
 
   @Autowired
-  private MessageHandler messageHandler;
-
-  @Autowired
   private HotelListingService hotelListingService;
-
-  @Autowired
-  private HotelRepository hotelRepository;
 
   @Autowired
   private ParameterHandler parameterHandler;
