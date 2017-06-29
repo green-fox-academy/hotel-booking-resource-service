@@ -67,6 +67,15 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.data[2]").doesNotExist());
   }
 
+  @Test
+  public void testSingleHotel_withValidId() throws Exception{
+    mockMvc.perform(get("/api/hotels/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.data.attributes.stars").value(5))
+            .andExpect(jsonPath("$.data.id").value(1));
+  }
+
   public Hotel initHotel() {
     Hotel hotel = new Hotel();
     hotel.setLocation("location");
