@@ -2,6 +2,7 @@ package com.mawsitsit.Service;
 
 import com.mawsitsit.Model.*;
 import com.mawsitsit.Repository.HotelRepository;
+import com.mawsitsit.Repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
@@ -21,10 +22,10 @@ public class HotelListingService {
   private HotelRepository hotelRepository;
 
   public EntityList<List<EntityContainer>> createList(HttpServletRequest request, Page page) {
-    List<Hotel> hotels = page.getContent();
+    List<ResourceEntity> entities = page.getContent();
     List<EntityContainer> entityContainers = new ArrayList();
-    for (Hotel hotel : hotels) {
-      entityContainers.add(new EntityContainer("hotel", hotel.getId(), hotel));
+    for (ResourceEntity entity : entities) {
+      entityContainers.add(new EntityContainer(entity.getClass().getSimpleName(), entity.getId(), entity));
     }
     return new EntityList(linkBuilder(request, page), entityContainers);
   }
@@ -85,10 +86,10 @@ public class HotelListingService {
     EntityContainer container = new EntityContainer("hotel", id, hotel);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
-    return new EntityList<EntityContainer>(link, container);
+    return new EntityList<>(link, container);
   }
 
-  public Page query(Specification<Hotel> specs, Pageable pageable) {
+  public Page queryHotels(Specification<ResourceEntity> specs, Pageable pageable) {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 

@@ -43,7 +43,7 @@ public class RESTController {
   @GetMapping(value = "/api/hotels", produces = "application/vnd.api+json")
   public EntityList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
                                HttpServletRequest request) {
-    return hotelListingService.createList(request, hotelListingService.query(parameterHandler.getParameters
+    return hotelListingService.createList(request, hotelListingService.queryHotels(parameterHandler.getParameters
             (allRequestParams), pageable));
   }
 

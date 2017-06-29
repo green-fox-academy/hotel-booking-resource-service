@@ -14,14 +14,13 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Review {
+public class Review extends ResourceEntity{
   @JsonIgnore
   @Id
   @GeneratedValue (strategy = GenerationType.AUTO)
   private Long id;
   @NotNull
   private Integer rating;
-  @NotNull
   private String dateTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
   @NotNull
   private String description;
