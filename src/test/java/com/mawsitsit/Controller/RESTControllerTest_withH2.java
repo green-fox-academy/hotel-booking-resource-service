@@ -6,12 +6,15 @@ import com.mawsitsit.Model.Hotel;
 import com.mawsitsit.Model.HotelContainer;
 import com.mawsitsit.Model.HotelList;
 import com.mawsitsit.Repository.HotelRepository;
+import com.mawsitsit.Service.MessageHandler;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +37,7 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppC
 @SpringBootTest(classes = BookingresourceApplication.class)
 @WebAppConfiguration
 @EnableWebMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class RESTControllerTest_withH2 {
   private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
           MediaType.APPLICATION_JSON.getSubtype(),
@@ -46,6 +50,9 @@ public class RESTControllerTest_withH2 {
 
   @Autowired
   private HotelRepository hotelRepository;
+
+  @MockBean
+  private MessageHandler messageHandler;
 
   @Before
   public void setUp() throws Exception {
@@ -75,7 +82,7 @@ public class RESTControllerTest_withH2 {
 
   @Test
   public void testHotels_withTwoFilterParams() throws Exception {
-    mockMvc.perform(get("/api/hotels?stars=4&has_swimming_pool=true"))
+    mockMvc.perform(get("/api/hotels?stars=4&has_swimming_pool=false"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[1]").exists())
             .andExpect(jsonPath("$.data[2]").doesNotExist());
