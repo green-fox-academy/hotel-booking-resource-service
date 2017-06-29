@@ -89,5 +89,4 @@ public class RESTController {
             requestUri.substring(requestUri.lastIndexOf('/') + 1))));
     return response;
   }
-
 }
