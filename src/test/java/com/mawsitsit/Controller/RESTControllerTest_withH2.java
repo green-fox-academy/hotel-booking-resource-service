@@ -76,4 +76,13 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.data.attributes.stars").value(5))
             .andExpect(jsonPath("$.data.id").value(1));
   }
+
+  @Test
+  public void testSingleHotel_withInvalidId() throws Exception{
+    mockMvc.perform(get("/api/hotels/10"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.errors[0].status").value(404))
+            .andExpect(jsonPath("$.errors[0].title").value("Not Found"))
+            .andExpect(jsonPath("$.errors[0].detail").value("No hotel found by id: 10"));
+  }
 }
