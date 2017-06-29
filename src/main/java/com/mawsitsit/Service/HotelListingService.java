@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -91,13 +92,15 @@ public class HotelListingService {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 
-  public void updateHotel(Long id, HotelList<HotelContainer> incomingAttributes) throws Exception{
+  public void updateHotel(Long id, HotelList<HotelContainer> incomingAttributes) throws Exception {
     Hotel hoteltoUpdate = hotelRepository.findOne(id);
     Hotel incomingHotel = incomingAttributes.getData().getAttributes();
-    
+    Field[] fields = incomingHotel.getClass().getDeclaredFields();
+    for (Field field : fields) {
+    }
   }
 
-  public void deleteHotel(Long id) throws Exception{
+  public void deleteHotel(Long id) throws Exception {
     hotelRepository.delete(id);
   }
 }
