@@ -22,7 +22,7 @@ public class Review {
   @NotNull
   private Integer rating;
   @NotNull
-  private String dateTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'hh:mm:ssZ"));
+  private String dateTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
   @NotNull
   private String description;
 }
