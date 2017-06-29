@@ -70,8 +70,8 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.OK)
   @PatchMapping("/api/hotels/{id}")
-  public void updateHotel(@PathVariable Long  id, @RequestBody HotelList<HotelContainer> incomingAttributes){
-
+  public void updateHotel(@PathVariable Long id, @RequestBody HotelList<HotelContainer> incomingAttributes) throws Exception {
+    hotelListingService.updateHotel(id, incomingAttributes);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
