@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class HotelListingService {
+public class EntityListingService {
 
   @Autowired
   private HotelRepository hotelRepository;
@@ -150,5 +150,9 @@ public class HotelListingService {
 
   public void deleteHotel(Long id) throws Exception {
     hotelRepository.delete(id);
+  }
+
+  public void deleteReview(Long id) throws Exception {
+    reviewRepository.delete(id);
   }
 }

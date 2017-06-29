@@ -24,7 +24,7 @@ public class RESTController {
   StatusChecker statusChecker;
 
   @Autowired
-  private HotelListingService hotelListingService;
+  private EntityListingService entityListingService;
 
   @Autowired
   private ParameterHandler parameterHandler;
@@ -43,61 +43,67 @@ public class RESTController {
   @GetMapping(value = "/api/hotels", produces = "application/vnd.api+json")
   public EntityList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
                                HttpServletRequest request) {
-    return hotelListingService.createList(request, hotelListingService.queryHotels(parameterHandler.getParameters
+    return entityListingService.createList(request, entityListingService.queryHotels(parameterHandler.getParameters
             (allRequestParams), pageable));
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/{id}")
   public EntityList singleHotel(@PathVariable Long id, HttpServletRequest request) {
-    return hotelListingService.getHotel(id, request);
+    return entityListingService.getHotel(id, request);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/api/hotels")
   public EntityList createHotel(@RequestBody @Valid EntityList<EntityContainer<Hotel>> singleHotel, HttpServletRequest
           request) {
-    return hotelListingService.addEntity(singleHotel, request);
+    return entityListingService.addEntity(singleHotel, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @PatchMapping("/api/hotels/{id}")
   public EntityList updateHotel(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Hotel>>
           incomingAttributes, HttpServletRequest request) throws Exception {
-    return hotelListingService.updateEntity(id, incomingAttributes, request);
+    return entityListingService.updateEntity(id, incomingAttributes, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @DeleteMapping("/api/hotels/{id}")
   public void deleteHotel(@PathVariable Long id, HttpServletRequest request) throws Exception {
-    hotelListingService.deleteHotel(id);
+    entityListingService.deleteHotel(id);
   }
 
   @GetMapping(value = "/api/hotels/reviews", produces = "application/vnd.api+json")
   public EntityList listReviews(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
                                 HttpServletRequest request) {
-    return hotelListingService.createList(request, hotelListingService.queryReviews(parameterHandler.getParameters
+    return entityListingService.createList(request, entityListingService.queryReviews(parameterHandler.getParameters
             (allRequestParams), pageable));
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/reviews/{id}")
   public EntityList singleReview(@PathVariable Long id, HttpServletRequest request) {
-    return hotelListingService.getReview(id, request);
+    return entityListingService.getReview(id, request);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/api/hotels/reviews")
   public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>> singleReview, HttpServletRequest
           request) {
-    return hotelListingService.addEntity(singleReview, request);
+    return entityListingService.addEntity(singleReview, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @PatchMapping("/api/hotels/reviews/{id}")
   public EntityList updateReview(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Review>>
           incomingAttributes, HttpServletRequest request) throws Exception {
-    return hotelListingService.updateEntity(id, incomingAttributes, request);
+    return entityListingService.updateEntity(id, incomingAttributes, request);
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @DeleteMapping("/api/hotels/reviews/{id}")
+  public void deleteReview(@PathVariable Long id, HttpServletRequest request) throws Exception {
+    entityListingService.deleteReview(id);
   }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
