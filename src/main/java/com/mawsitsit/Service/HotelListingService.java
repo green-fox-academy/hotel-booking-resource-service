@@ -92,7 +92,8 @@ public class HotelListingService {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 
-  public HotelList updateHotel(Long id, HotelList<HotelContainer> incomingAttributes, HttpServletRequest request) throws Exception {
+  public HotelList updateHotel(Long id, HotelList<HotelContainer> incomingAttributes, HttpServletRequest request)
+          throws Exception {
     Hotel hotelToUpdate = hotelRepository.findOne(id);
     if (hotelToUpdate == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
