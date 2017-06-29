@@ -63,15 +63,27 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.OK)
   @PatchMapping("/api/hotels/{id}")
   public EntityList updateHotel(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Hotel>>
-          incomingAttributes,
-                                HttpServletRequest request) throws Exception {
-   return hotelListingService.updateHotel(id, incomingAttributes, request);
+          incomingAttributes, HttpServletRequest request) throws Exception {
+    return hotelListingService.updateHotel(id, incomingAttributes, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @DeleteMapping("/api/hotels/{id}")
   public void deleteHotel(@PathVariable Long id, HttpServletRequest request) throws Exception {
     hotelListingService.deleteHotel(id);
+  }
+
+  @GetMapping(value = "/api/hotels/reviews", produces = "application/vnd.api+json")
+  public EntityList listReviews(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
+                                HttpServletRequest request) {
+    return hotelListingService.createList(request, hotelListingService.queryReviews(parameterHandler.getParameters
+            (allRequestParams), pageable));
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/api/hotels/reviews/{id}")
+  public EntityList singleReview(@PathVariable Long id, HttpServletRequest request) {
+    return hotelListingService.getReview(id, request);
   }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)

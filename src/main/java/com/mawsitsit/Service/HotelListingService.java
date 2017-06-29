@@ -21,6 +21,9 @@ public class HotelListingService {
   @Autowired
   private HotelRepository hotelRepository;
 
+  @Autowired
+  private ReviewRepository reviewRepository;
+
   public EntityList<List<EntityContainer>> createList(HttpServletRequest request, Page page) {
     List<ResourceEntity> entities = page.getContent();
     List<EntityContainer> entityContainers = new ArrayList();
@@ -89,8 +92,24 @@ public class HotelListingService {
     return new EntityList<>(link, container);
   }
 
+  public EntityList<EntityContainer> getReview(Long id, HttpServletRequest request) throws
+          EmptyResultDataAccessException {
+    Review review = reviewRepository.findOne(id);
+    if (review == null) {
+      throw new EmptyResultDataAccessException(id.toString(), id.intValue());
+    }
+    EntityContainer container = new EntityContainer("review", id, review);
+    Links link = new Links();
+    link.setSelf(request.getRequestURL().toString());
+    return new EntityList<>(link, container);
+  }
+
   public Page queryHotels(Specification<ResourceEntity> specs, Pageable pageable) {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
+  }
+
+  public Page queryReviews(Specification<ResourceEntity> specs, Pageable pageable) {
+    return specs == null ? reviewRepository.findAll(pageable) : reviewRepository.findAll(specs, pageable);
   }
 
   public EntityList updateHotel(Long id, EntityList<EntityContainer<Hotel>> incomingAttributes, HttpServletRequest
