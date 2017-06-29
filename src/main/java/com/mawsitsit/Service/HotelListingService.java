@@ -91,6 +91,12 @@ public class HotelListingService {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 
+  public void updateHotel(Long id, HotelList<HotelContainer> incomingAttributes) throws Exception{
+    Hotel hoteltoUpdate = hotelRepository.findOne(id);
+    Hotel incomingHotel = incomingAttributes.getData().getAttributes();
+    
+  }
+
   public void deleteHotel(Long id) throws Exception{
     hotelRepository.delete(id);
   }
