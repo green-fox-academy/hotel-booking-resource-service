@@ -69,6 +69,12 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.OK)
+  @PatchMapping("/api/hotels/{id}")
+  public void updateHotel(@PathVariable Long  id){
+
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
   @DeleteMapping("/api/hotels/{id}")
   public void deleteHotel(@PathVariable Long id, HttpServletRequest request) throws Exception {
     hotelListingService.deleteHotel(id);
