@@ -72,10 +72,10 @@ public class HotelListingService {
           (EntityList<EntityContainer<T>> singleEntity, HttpServletRequest request) {
     ResourceEntity entity = singleEntity.getData().getAttributes();
     if (entity.getClass().equals(Hotel.class)) {
-      hotelRepository.save((Hotel)entity);
+      hotelRepository.save((Hotel) entity);
     }
     if (entity.getClass().equals(Review.class)) {
-      reviewRepository.save((Review)entity);
+      reviewRepository.save((Review) entity);
     }
     EntityContainer entityContainer = singleEntity.getData();
     entityContainer.setId(entity.getId());
@@ -86,7 +86,8 @@ public class HotelListingService {
     return singleEntity;
   }
 
-  public EntityList<EntityContainer> getHotel(Long id, HttpServletRequest request) throws EmptyResultDataAccessException {
+  public EntityList<EntityContainer> getHotel(Long id, HttpServletRequest request) throws
+          EmptyResultDataAccessException {
     Hotel hotel = hotelRepository.findOne(id);
     if (hotel == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
@@ -117,23 +118,34 @@ public class HotelListingService {
     return specs == null ? reviewRepository.findAll(pageable) : reviewRepository.findAll(specs, pageable);
   }
 
-  public EntityList updateHotel(Long id, EntityList<EntityContainer<Hotel>> incomingAttributes, HttpServletRequest
-          request)
-          throws Exception {
-    Hotel hotelToUpdate = hotelRepository.findOne(id);
-    if (hotelToUpdate == null) {
+  public <T extends ResourceEntity> EntityList updateEntity(Long id, EntityList<EntityContainer<T>>
+          incomingAttributes, HttpServletRequest request) throws Exception {
+    ResourceEntity entityToUpdate = null;
+    if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
+      entityToUpdate = hotelRepository.findOne(id);
+    } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
+      entityToUpdate = reviewRepository.findOne(id);
+    }
+    if (entityToUpdate == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
-    Hotel incomingHotel = incomingAttributes.getData().getAttributes();
-    Field[] fields = incomingHotel.getClass().getDeclaredFields();
+    ResourceEntity incomingEntity = incomingAttributes.getData().getAttributes();
+    Field[] fields = incomingEntity.getClass().getDeclaredFields();
     for (Field field : fields) {
       field.setAccessible(true);
-      if (field.get(incomingHotel) != null) {
-        field.set(hotelToUpdate, field.get(incomingHotel));
+      if (field.get(incomingEntity) != null) {
+        field.set(entityToUpdate, field.get(incomingEntity));
       }
     }
-    hotelRepository.save(hotelToUpdate);
-    return getHotel(id, request);
+    if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
+      hotelRepository.save((Hotel)entityToUpdate);
+      return getHotel(id, request);
+    } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
+      reviewRepository.save((Review) entityToUpdate);
+      return getReview(id, request);
+    } else {
+      return null;
+    }
   }
 
   public void deleteHotel(Long id) throws Exception {

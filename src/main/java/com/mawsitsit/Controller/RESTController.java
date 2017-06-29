@@ -64,7 +64,7 @@ public class RESTController {
   @PatchMapping("/api/hotels/{id}")
   public EntityList updateHotel(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Hotel>>
           incomingAttributes, HttpServletRequest request) throws Exception {
-    return hotelListingService.updateHotel(id, incomingAttributes, request);
+    return hotelListingService.updateEntity(id, incomingAttributes, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
@@ -91,6 +91,13 @@ public class RESTController {
   public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>> singleReview, HttpServletRequest
           request) {
     return hotelListingService.addEntity(singleReview, request);
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @PatchMapping("/api/hotels/reviews/{id}")
+  public EntityList updateReview(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Review>>
+          incomingAttributes, HttpServletRequest request) throws Exception {
+    return hotelListingService.updateEntity(id, incomingAttributes, request);
   }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)

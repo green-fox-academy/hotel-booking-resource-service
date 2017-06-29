@@ -21,8 +21,8 @@ public class Review extends ResourceEntity{
   private Long id;
   @NotNull
   private Integer rating;
-  private String dateTime = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
   @NotNull
   private String description;
+  private String created_at = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
 }
 
