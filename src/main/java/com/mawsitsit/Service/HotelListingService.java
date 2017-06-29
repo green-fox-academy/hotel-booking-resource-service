@@ -94,6 +94,9 @@ public class HotelListingService {
 
   public HotelList updateHotel(Long id, HotelList<HotelContainer> incomingAttributes, HttpServletRequest request) throws Exception {
     Hotel hotelToUpdate = hotelRepository.findOne(id);
+    if (hotelToUpdate == null) {
+      throw new EmptyResultDataAccessException(id.toString(), id.intValue());
+    }
     Hotel incomingHotel = incomingAttributes.getData().getAttributes();
     Field[] fields = incomingHotel.getClass().getDeclaredFields();
     for (Field field : fields) {
