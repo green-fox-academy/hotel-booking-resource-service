@@ -97,7 +97,11 @@ public class HotelListingService {
     Hotel incomingHotel = incomingAttributes.getData().getAttributes();
     Field[] fields = incomingHotel.getClass().getDeclaredFields();
     for (Field field : fields) {
+      if (field.get(incomingHotel) != null) {
+        field.set(hoteltoUpdate, field.get(incomingHotel));
+      }
     }
+    hotelRepository.save(hoteltoUpdate);
   }
 
   public void deleteHotel(Long id) throws Exception {
