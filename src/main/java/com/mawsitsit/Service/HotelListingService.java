@@ -93,15 +93,15 @@ public class HotelListingService {
   }
 
   public void updateHotel(Long id, HotelList<HotelContainer> incomingAttributes) throws Exception {
-    Hotel hoteltoUpdate = hotelRepository.findOne(id);
+    Hotel hotelToUpdate = hotelRepository.findOne(id);
     Hotel incomingHotel = incomingAttributes.getData().getAttributes();
     Field[] fields = incomingHotel.getClass().getDeclaredFields();
     for (Field field : fields) {
       if (field.get(incomingHotel) != null) {
-        field.set(hoteltoUpdate, field.get(incomingHotel));
+        field.set(hotelToUpdate, field.get(incomingHotel));
       }
     }
-    hotelRepository.save(hoteltoUpdate);
+    hotelRepository.save(hotelToUpdate);
   }
 
   public void deleteHotel(Long id) throws Exception {
