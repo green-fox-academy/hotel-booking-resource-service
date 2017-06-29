@@ -97,6 +97,7 @@ public class HotelListingService {
     Hotel incomingHotel = incomingAttributes.getData().getAttributes();
     Field[] fields = incomingHotel.getClass().getDeclaredFields();
     for (Field field : fields) {
+      field.setAccessible(true);
       if (field.get(incomingHotel) != null) {
         field.set(hotelToUpdate, field.get(incomingHotel));
       }
