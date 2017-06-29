@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import static com.mawsitsit.Service.HotelListingServiceTest.initHotel;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -74,23 +75,5 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.data").exists())
             .andExpect(jsonPath("$.data.attributes.stars").value(5))
             .andExpect(jsonPath("$.data.id").value(1));
-  }
-
-  public Hotel initHotel() {
-    Hotel hotel = new Hotel();
-    hotel.setLocation("location");
-    hotel.setName("name");
-    hotel.setMain_image_src("src");
-    hotel.setHas_wifi(true);
-    hotel.setHas_parking(true);
-    hotel.setHas_pets(true);
-    hotel.setHas_restaurant(false);
-    hotel.setHas_bar(true);
-    hotel.setHas_swimming_pool(true);
-    hotel.setHas_air_conditioning(true);
-    hotel.setHas_gym(true);
-    hotel.setMeal_plan("mealplan");
-    hotel.setStars(5);
-    return hotel;
   }
 }
