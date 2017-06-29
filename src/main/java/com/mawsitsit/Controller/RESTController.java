@@ -57,7 +57,7 @@ public class RESTController {
   @PostMapping("/api/hotels")
   public EntityList createHotel(@RequestBody @Valid EntityList<EntityContainer<Hotel>> singleHotel, HttpServletRequest
           request) {
-    return hotelListingService.addHotel(singleHotel, request);
+    return hotelListingService.addEntity(singleHotel, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
@@ -84,6 +84,13 @@ public class RESTController {
   @GetMapping("/api/hotels/reviews/{id}")
   public EntityList singleReview(@PathVariable Long id, HttpServletRequest request) {
     return hotelListingService.getReview(id, request);
+  }
+
+  @ResponseStatus(code = HttpStatus.CREATED)
+  @PostMapping("/api/hotels/reviews")
+  public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>> singleReview, HttpServletRequest
+          request) {
+    return hotelListingService.addEntity(singleReview, request);
   }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)

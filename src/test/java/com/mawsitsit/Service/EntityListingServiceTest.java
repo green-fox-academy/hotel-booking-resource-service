@@ -110,10 +110,10 @@ public class EntityListingServiceTest {
     }).when(hotelRepository).save(hotel);
 
     Long id = 1L;
-    assertEquals(hotelListingService.addHotel(singleHotel, request).getData().getId(), id);
-    assertNotNull(hotelListingService.addHotel(singleHotel, request).getLinks().getSelf());
-    assertNull(hotelListingService.addHotel(singleHotel, request).getLinks().getNext());
-    assertEquals(hotelListingService.addHotel(singleHotel, request).getData().getAttributes().getHas_air_conditioning
+    assertEquals(hotelListingService.addEntity(singleHotel, request).getData().getId(), id);
+    assertNotNull(hotelListingService.addEntity(singleHotel, request).getLinks().getSelf());
+    assertNull(hotelListingService.addEntity(singleHotel, request).getLinks().getNext());
+    assertEquals(hotelListingService.addEntity(singleHotel, request).getData().getAttributes().getHas_air_conditioning
             (), true);
   }
 

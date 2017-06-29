@@ -68,17 +68,22 @@ public class HotelListingService {
     return links;
   }
 
-  public EntityList<EntityContainer<Hotel>> addHotel(EntityList<EntityContainer<Hotel>> singleHotel, HttpServletRequest
-          request) {
-    Hotel hotel = singleHotel.getData().getAttributes();
-    hotelRepository.save(hotel);
-    EntityContainer entityContainer = singleHotel.getData();
-    entityContainer.setId(hotel.getId());
-    singleHotel.setData(entityContainer);
+  public <T extends ResourceEntity> EntityList<EntityContainer<T>> addEntity
+          (EntityList<EntityContainer<T>> singleEntity, HttpServletRequest request) {
+    ResourceEntity entity = singleEntity.getData().getAttributes();
+    if (entity.getClass().equals(Hotel.class)) {
+      hotelRepository.save((Hotel)entity);
+    }
+    if (entity.getClass().equals(Review.class)) {
+      reviewRepository.save((Review)entity);
+    }
+    EntityContainer entityContainer = singleEntity.getData();
+    entityContainer.setId(entity.getId());
+    singleEntity.setData(entityContainer);
     Links link = new Links();
-    link.setSelf(request.getRequestURL().toString() + "/" + hotel.getId());
-    singleHotel.setLinks(link);
-    return singleHotel;
+    link.setSelf(request.getRequestURL().toString() + "/" + entity.getId());
+    singleEntity.setLinks(link);
+    return singleEntity;
   }
 
   public EntityList<EntityContainer> getHotel(Long id, HttpServletRequest request) throws EmptyResultDataAccessException {
@@ -86,7 +91,7 @@ public class HotelListingService {
     if (hotel == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
-    EntityContainer container = new EntityContainer("hotel", id, hotel);
+    EntityContainer container = new EntityContainer("Hotel", id, hotel);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     return new EntityList<>(link, container);
@@ -98,7 +103,7 @@ public class HotelListingService {
     if (review == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
-    EntityContainer container = new EntityContainer("review", id, review);
+    EntityContainer container = new EntityContainer("Review", id, review);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     return new EntityList<>(link, container);

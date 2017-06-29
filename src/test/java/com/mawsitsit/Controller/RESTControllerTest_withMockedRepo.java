@@ -106,7 +106,7 @@ public class RESTControllerTest_withMockedRepo {
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.links.self").exists())
             .andExpect(jsonPath("$.links.next").doesNotExist())
-            .andExpect(jsonPath("$.data[0].type").value("hotel"))
+            .andExpect(jsonPath("$.data[0].type").value("Hotel"))
             .andExpect(jsonPath("$.data[0].attributes.has_wifi").value(false));
   }
 
