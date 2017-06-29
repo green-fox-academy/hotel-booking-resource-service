@@ -14,7 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import static org.junit.Assert.*;
+
 import static com.mawsitsit.Service.HotelListingServiceTest.initHotel;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -84,5 +87,11 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.errors[0].status").value(404))
             .andExpect(jsonPath("$.errors[0].title").value("Not Found"))
             .andExpect(jsonPath("$.errors[0].detail").value("No hotel found by id: 10"));
+  }
+
+  @Test
+  public void testDeleteHotel_withValidId() throws Exception{
+    mockMvc.perform(delete("/api/hotels/1"));
+    assertEquals(null, hotelRepository.findOne(1L));
   }
 }
