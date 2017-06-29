@@ -92,7 +92,7 @@ public class HotelListingService {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 
-  public void updateHotel(Long id, HotelList<HotelContainer> incomingAttributes) throws Exception {
+  public HotelList updateHotel(Long id, HotelList<HotelContainer> incomingAttributes, HttpServletRequest request) throws Exception {
     Hotel hotelToUpdate = hotelRepository.findOne(id);
     Hotel incomingHotel = incomingAttributes.getData().getAttributes();
     Field[] fields = incomingHotel.getClass().getDeclaredFields();
@@ -103,6 +103,7 @@ public class HotelListingService {
       }
     }
     hotelRepository.save(hotelToUpdate);
+    return getHotel(id, request);
   }
 
   public void deleteHotel(Long id) throws Exception {
