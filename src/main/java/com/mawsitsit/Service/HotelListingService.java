@@ -3,6 +3,7 @@ package com.mawsitsit.Service;
 import com.mawsitsit.Model.*;
 import com.mawsitsit.Repository.HotelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,18 +77,39 @@ public class HotelListingService {
     return singleHotel;
   }
 
-  public HotelList<HotelContainer> getHotel(Long id, HttpServletRequest request) throws EntityNotFoundException {
+  public HotelList<HotelContainer> getHotel(Long id, HttpServletRequest request) throws EmptyResultDataAccessException {
     Hotel hotel = hotelRepository.findOne(id);
     if (hotel == null) {
-      throw new EntityNotFoundException(id.toString());
+      throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
     HotelContainer container = new HotelContainer("hotel", id, hotel);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     return new HotelList<HotelContainer>(link, container);
+  }
 
   public Page query(Specification<Hotel> specs, Pageable pageable) {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
-}
 
+  public HotelList updateHotel(Long id, HotelList<HotelContainer> incomingAttributes, HttpServletRequest request) throws Exception {
+    Hotel hotelToUpdate = hotelRepository.findOne(id);
+    if (hotelToUpdate == null) {
+      throw new EmptyResultDataAccessException(id.toString(), id.intValue());
+    }
+    Hotel incomingHotel = incomingAttributes.getData().getAttributes();
+    Field[] fields = incomingHotel.getClass().getDeclaredFields();
+    for (Field field : fields) {
+      field.setAccessible(true);
+      if (field.get(incomingHotel) != null) {
+        field.set(hotelToUpdate, field.get(incomingHotel));
+      }
+    }
+    hotelRepository.save(hotelToUpdate);
+    return getHotel(id, request);
+  }
+
+  public void deleteHotel(Long id) throws Exception {
+    hotelRepository.delete(id);
+  }
+}

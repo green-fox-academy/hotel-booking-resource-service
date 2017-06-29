@@ -101,7 +101,7 @@ public class RESTControllerTest_withMockedRepo {
     returnValue.add(hotel);
     Page<Hotel> page = new PageImpl<Hotel>(returnValue);
     BDDMockito.given(hotelRepository.findAll(Matchers.any(Pageable.class))).willReturn(page);
-    mockMvc.perform(get("/hotels"))
+    mockMvc.perform(get("/api/hotels"))
             .andExpect(status().isOk())
             .andExpect(content().contentType(contentType))
             .andExpect(jsonPath("$.links.self").exists())
@@ -123,7 +123,7 @@ public class RESTControllerTest_withMockedRepo {
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(singleHotel);
 
-    mockMvc.perform(post("/hotels")
+    mockMvc.perform(post("/api/hotels")
             .contentType(contentType)
             .content(jsonInput))
             .andExpect(status().isBadRequest())
