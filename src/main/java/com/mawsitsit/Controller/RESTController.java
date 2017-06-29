@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
@@ -65,6 +66,12 @@ public class RESTController {
                     (allRequestParams), pageable));
   }
 
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/hotels/{id}")
+  public HotelList singleCheckout(@PathVariable Long id, HttpServletRequest request) {
+     return hotelListingService.getHotel(id, request);
+  }
+
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/hotels")
   public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
@@ -84,6 +91,15 @@ public class RESTController {
     Response response = new Response();
     response.addError(new Error(400, "Bad Request", String.format("The attribute fields: %s are missing.",
             Validator.getMissingFields(e.getBindingResult()))));
+    return response;
+  }
+
+  @ResponseStatus(code = HttpStatus.NOT_FOUND)
+  @ExceptionHandler(EntityNotFoundException.class)
+  public Response notFound(EntityNotFoundException e, HttpServletRequest request) {
+    Response response = new Response();
+    response.addError(new Error(404, "Not Found", String.format("No hotel found by id: %s",
+            e.getMessage())));
     return response;
   }
 }

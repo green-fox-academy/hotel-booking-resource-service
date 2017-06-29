@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +38,7 @@ public class HotelListingService {
     if (page.hasPrevious()) {
       links.setSelf(requestURL + "?" + query);
       links.setPrev(requestURL + "?" + query.replaceFirst(String.valueOf
-              (pageNumber), String.valueOf(pageNumber-1)));
+              (pageNumber), String.valueOf(pageNumber - 1)));
     } else {
       if (query == null) {
         links.setSelf(requestURL);
@@ -73,6 +74,16 @@ public class HotelListingService {
     singleHotel.setLinks(link);
     return singleHotel;
   }
+
+  public HotelList<HotelContainer> getHotel(Long id, HttpServletRequest request) throws EntityNotFoundException {
+    Hotel hotel = hotelRepository.findOne(id);
+    if (hotel == null) {
+      throw new EntityNotFoundException(id.toString());
+    }
+    HotelContainer container = new HotelContainer("hotel", id, hotel);
+    Links link = new Links();
+    link.setSelf(request.getRequestURL().toString());
+    return new HotelList<HotelContainer>(link, container);
 
   public Page query(Specification<Hotel> specs, Pageable pageable) {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
