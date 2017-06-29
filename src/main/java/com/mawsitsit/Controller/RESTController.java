@@ -41,27 +41,30 @@ public class RESTController {
   }
 
   @GetMapping(value = "/api/hotels", produces = "application/vnd.api+json")
-  public HotelList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
-                              HttpServletRequest request) {
+  public EntityList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
+                               HttpServletRequest request) {
     return hotelListingService.createList(request, hotelListingService.query(parameterHandler.getParameters
             (allRequestParams), pageable));
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/{id}")
-  public HotelList singleHotel(@PathVariable Long id, HttpServletRequest request) {
+  public EntityList singleHotel(@PathVariable Long id, HttpServletRequest request) {
     return hotelListingService.getHotel(id, request);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/api/hotels")
-  public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request) {
+  public EntityList createHotel(@RequestBody @Valid EntityList<EntityContainer<Hotel>> singleHotel, HttpServletRequest
+          request) {
     return hotelListingService.addHotel(singleHotel, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @PatchMapping("/api/hotels/{id}")
-  public HotelList updateHotel(@PathVariable Long id, @RequestBody HotelList<HotelContainer> incomingAttributes, HttpServletRequest request) throws Exception {
+  public EntityList updateHotel(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Hotel>>
+          incomingAttributes,
+                                HttpServletRequest request) throws Exception {
    return hotelListingService.updateHotel(id, incomingAttributes, request);
   }
 

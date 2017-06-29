@@ -3,8 +3,8 @@ package com.mawsitsit.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
-import com.mawsitsit.Model.HotelList;
+import com.mawsitsit.Model.EntityContainer;
+import com.mawsitsit.Model.EntityList;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
 import org.junit.Before;
@@ -25,7 +25,7 @@ import java.nio.charset.Charset;
 
 import static org.junit.Assert.*;
 
-import static com.mawsitsit.Service.HotelListingServiceTest.initHotel;
+import static com.mawsitsit.Service.EntityListingServiceTest.initHotel;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -116,10 +116,10 @@ public class RESTControllerTest_withH2 {
   public void testUpdateHotel_withValidId() throws Exception {
     Hotel hotel = initHotel();
     hotel.setLocation("Szeged");
-    HotelList<HotelContainer> hotelList = new HotelList<>(null, new HotelContainer("hotel", 1L, hotel));
+    EntityList<EntityContainer> entityList = new EntityList<>(null, new EntityContainer("hotel", 1L, hotel));
 
     ObjectMapper mapper = new ObjectMapper();
-    String jsonInput = mapper.writeValueAsString(hotelList);
+    String jsonInput = mapper.writeValueAsString(entityList);
 
     mockMvc.perform(patch("/api/hotels/1")
             .contentType(contentType)

@@ -1,8 +1,8 @@
 package com.mawsitsit.Service;
 
 import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
-import com.mawsitsit.Model.HotelList;
+import com.mawsitsit.Model.EntityContainer;
+import com.mawsitsit.Model.EntityList;
 import com.mawsitsit.Repository.HotelRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HotelListingServiceTest {
+public class EntityListingServiceTest {
 
   @InjectMocks
   private HotelListingService hotelListingService;
@@ -97,11 +97,11 @@ public class HotelListingServiceTest {
   public void testAddHotel_withValidHotel() {
     Hotel hotel = initHotel();
 
-    HotelContainer hotelContainer = new HotelContainer();
-    hotelContainer.setType("hotel");
-    hotelContainer.setAttributes(hotel);
+    EntityContainer entityContainer = new EntityContainer();
+    entityContainer.setType("hotel");
+    entityContainer.setAttributes(hotel);
 
-    HotelList<HotelContainer> singleHotel = new HotelList<>(null, hotelContainer);
+    EntityList<EntityContainer<Hotel>> singleHotel = new EntityList<>(null, entityContainer);
 
     BDDMockito.given(request.getRequestURL()).willReturn(new StringBuffer("testURL"));
     Mockito.doAnswer(invocation -> {

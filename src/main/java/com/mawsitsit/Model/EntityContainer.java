@@ -12,10 +12,10 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelContainer {
+public class EntityContainer<T> {
   private String type;
   private Long id;
   @Valid
   @NotNull
-  private Hotel attributes;
+  private T attributes;
 }

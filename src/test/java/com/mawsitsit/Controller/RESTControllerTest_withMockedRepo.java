@@ -3,8 +3,8 @@ package com.mawsitsit.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
-import com.mawsitsit.Model.HotelList;
+import com.mawsitsit.Model.EntityContainer;
+import com.mawsitsit.Model.EntityList;
 import com.mawsitsit.Repository.HearthbeatRepository;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
@@ -114,11 +114,11 @@ public class RESTControllerTest_withMockedRepo {
   public void testHotels_withPost_withInvalidHotel() throws Exception {
     Hotel hotel = new Hotel();
 
-    HotelContainer hotelContainer = new HotelContainer();
-    hotelContainer.setType("hotel");
-    hotelContainer.setAttributes(hotel);
+    EntityContainer entityContainer = new EntityContainer();
+    entityContainer.setType("hotel");
+    entityContainer.setAttributes(hotel);
 
-    HotelList<HotelContainer> singleHotel = new HotelList<>(null, hotelContainer);
+    EntityList<EntityContainer> singleHotel = new EntityList<>(null, entityContainer);
 
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(singleHotel);

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -21,13 +20,13 @@ public class HotelListingService {
   @Autowired
   private HotelRepository hotelRepository;
 
-  public HotelList<List<HotelContainer>> createList(HttpServletRequest request, Page page) {
+  public EntityList<List<EntityContainer>> createList(HttpServletRequest request, Page page) {
     List<Hotel> hotels = page.getContent();
-    List<HotelContainer> hotelContainers = new ArrayList();
+    List<EntityContainer> entityContainers = new ArrayList();
     for (Hotel hotel : hotels) {
-      hotelContainers.add(new HotelContainer("hotel", hotel.getId(), hotel));
+      entityContainers.add(new EntityContainer("hotel", hotel.getId(), hotel));
     }
-    return new HotelList(linkBuilder(request, page), hotelContainers);
+    return new EntityList(linkBuilder(request, page), entityContainers);
   }
 
   public Links linkBuilder(HttpServletRequest request, Page page) {
@@ -65,34 +64,36 @@ public class HotelListingService {
     return links;
   }
 
-  public HotelList<HotelContainer> addHotel(HotelList<HotelContainer> singleHotel, HttpServletRequest request) {
+  public EntityList<EntityContainer<Hotel>> addHotel(EntityList<EntityContainer<Hotel>> singleHotel, HttpServletRequest
+          request) {
     Hotel hotel = singleHotel.getData().getAttributes();
     hotelRepository.save(hotel);
-    HotelContainer hotelContainer = singleHotel.getData();
-    hotelContainer.setId(hotel.getId());
-    singleHotel.setData(hotelContainer);
+    EntityContainer entityContainer = singleHotel.getData();
+    entityContainer.setId(hotel.getId());
+    singleHotel.setData(entityContainer);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString() + "/" + hotel.getId());
     singleHotel.setLinks(link);
     return singleHotel;
   }
 
-  public HotelList<HotelContainer> getHotel(Long id, HttpServletRequest request) throws EmptyResultDataAccessException {
+  public EntityList<EntityContainer> getHotel(Long id, HttpServletRequest request) throws EmptyResultDataAccessException {
     Hotel hotel = hotelRepository.findOne(id);
     if (hotel == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
-    HotelContainer container = new HotelContainer("hotel", id, hotel);
+    EntityContainer container = new EntityContainer("hotel", id, hotel);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
-    return new HotelList<HotelContainer>(link, container);
+    return new EntityList<EntityContainer>(link, container);
   }
 
   public Page query(Specification<Hotel> specs, Pageable pageable) {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 
-  public HotelList updateHotel(Long id, HotelList<HotelContainer> incomingAttributes, HttpServletRequest request)
+  public EntityList updateHotel(Long id, EntityList<EntityContainer<Hotel>> incomingAttributes, HttpServletRequest
+          request)
           throws Exception {
     Hotel hotelToUpdate = hotelRepository.findOne(id);
     if (hotelToUpdate == null) {

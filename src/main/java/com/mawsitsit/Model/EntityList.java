@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelList<T> {
+public class EntityList<T> {
   private Links links;
   @Valid
   @NotNull
