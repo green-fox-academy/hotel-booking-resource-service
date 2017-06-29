@@ -51,15 +51,21 @@ public class RESTController {
 
   @GetMapping(value = "/api/hotels", produces = "application/vnd.api+json")
   public HotelList listHotels(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
-                                  HttpServletRequest request) {
+                              HttpServletRequest request) {
     return hotelListingService.createList(request, hotelListingService.query(parameterHandler.getParameters
-                    (allRequestParams), pageable));
+            (allRequestParams), pageable));
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/{id}")
-  public HotelList singleCheckout(@PathVariable Long id, HttpServletRequest request) {
-     return hotelListingService.getHotel(id, request);
+  public HotelList singleHotel(@PathVariable Long id, HttpServletRequest request) {
+    return hotelListingService.getHotel(id, request);
+  }
+
+  @ResponseStatus(code = HttpStatus.CREATED)
+  @PostMapping("/api/hotels")
+  public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request) {
+    return hotelListingService.addHotel(singleHotel, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
@@ -67,12 +73,6 @@ public class RESTController {
   public void deleteHotel(@PathVariable Long id, HttpServletRequest request) throws Exception {
     hotelListingService.deleteHotel(id);
   }
-
-  @ResponseStatus(code = HttpStatus.CREATED)
-  @PostMapping("/api/hotels")
-  public HotelList createHotel(@RequestBody @Valid HotelList<HotelContainer> singleHotel, HttpServletRequest request){
-    return hotelListingService.addHotel(singleHotel, request);
-    }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -89,7 +89,7 @@ public class RESTController {
     String requestUri = request.getRequestURI();
     Response response = new Response();
     response.addError(new Error(404, "Not Found", String.format("No hotel found by id: %s",
-            requestUri.substring(requestUri.lastIndexOf('/')+1))));
+            requestUri.substring(requestUri.lastIndexOf('/') + 1))));
     return response;
   }
 }
