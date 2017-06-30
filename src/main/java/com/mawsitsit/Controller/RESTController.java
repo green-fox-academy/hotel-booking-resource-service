@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.concurrent.TimeoutException;
 
@@ -119,8 +120,9 @@ public class RESTController {
   @ExceptionHandler(EmptyResultDataAccessException.class)
   public Response notFound(EmptyResultDataAccessException e, HttpServletRequest request) {
     String requestUri = request.getRequestURI();
+    String[] params = requestUri.split("/");
     Response response = new Response();
-    response.addError(new Error(404, "Not Found", String.format("No hotel found by id: %s",
+    response.addError(new Error(404, "Not Found", String.format("No %s found by id: %s", params[params.length-2],
             requestUri.substring(requestUri.lastIndexOf('/') + 1))));
     return response;
   }
