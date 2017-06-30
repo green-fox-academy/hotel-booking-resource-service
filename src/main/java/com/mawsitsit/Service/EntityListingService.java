@@ -77,8 +77,9 @@ public class EntityListingService {
       hotelRepository.save((Hotel) entity);
     }
     if (entity.getClass().equals(Review.class)) {
-      reviewRepository.save(((Review) entity).setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
-              ("yyyy-MM-dd'T'HH:mm:ssZ"))));
+      ((Review) entity).setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
+                      ("yyyy-MM-dd'T'HH:mm:ssZ")));
+      reviewRepository.save((Review)entity);
     }
     EntityContainer entityContainer = singleEntity.getData();
     entityContainer.setId(entity.getId());

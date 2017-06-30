@@ -8,11 +8,8 @@ import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 
 @Entity
-@Accessors(chain = true)
 @Getter
 @Setter
 @NoArgsConstructor
