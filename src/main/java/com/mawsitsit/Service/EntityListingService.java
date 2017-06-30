@@ -86,25 +86,24 @@ public class EntityListingService {
     return singleEntity;
   }
 
-  public EntityList<EntityContainer> getHotel(Long id, HttpServletRequest request) throws
-          EmptyResultDataAccessException {
+  public Hotel getHotel(Long id) throws EmptyResultDataAccessException {
     Hotel hotel = hotelRepository.findOne(id);
     if (hotel == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
-    EntityContainer container = new EntityContainer("Hotel", id, hotel);
-    Links link = new Links();
-    link.setSelf(request.getRequestURL().toString());
-    return new EntityList<>(link, container);
+    return hotel;
   }
 
-  public EntityList<EntityContainer> getReview(Long id, HttpServletRequest request) throws
-          EmptyResultDataAccessException {
+  public Review getReview(Long id) throws EmptyResultDataAccessException {
     Review review = reviewRepository.findOne(id);
     if (review == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
-    EntityContainer container = new EntityContainer("Review", id, review);
+    return review;
+  }
+
+  public <T extends ResourceEntity> EntityList<EntityContainer> wrapEntity(T entity, HttpServletRequest request) {
+    EntityContainer container = new EntityContainer(entity.getClass().getSimpleName(), entity.getId(), entity);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     return new EntityList<>(link, container);
@@ -138,11 +137,11 @@ public class EntityListingService {
       }
     }
     if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
-      hotelRepository.save((Hotel)entityToUpdate);
-      return getHotel(id, request);
+      hotelRepository.save((Hotel) entityToUpdate);
+      return wrapEntity(getHotel(id), request);
     } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
       reviewRepository.save((Review) entityToUpdate);
-      return getReview(id, request);
+      return wrapEntity(getReview(id), request);
     } else {
       return null;
     }

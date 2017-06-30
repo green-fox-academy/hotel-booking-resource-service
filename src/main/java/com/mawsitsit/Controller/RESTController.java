@@ -50,7 +50,7 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/{id}")
   public EntityList singleHotel(@PathVariable Long id, HttpServletRequest request) {
-    return entityListingService.getHotel(id, request);
+    return entityListingService.wrapEntity(entityListingService.getHotel(id), request);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
@@ -83,7 +83,7 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/reviews/{id}")
   public EntityList singleReview(@PathVariable Long id, HttpServletRequest request) {
-    return entityListingService.getReview(id, request);
+    return entityListingService.wrapEntity(entityListingService.getReview(id), request);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
