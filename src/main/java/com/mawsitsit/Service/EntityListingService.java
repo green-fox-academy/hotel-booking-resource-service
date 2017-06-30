@@ -12,6 +12,8 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.Field;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +77,8 @@ public class EntityListingService {
       hotelRepository.save((Hotel) entity);
     }
     if (entity.getClass().equals(Review.class)) {
-      reviewRepository.save((Review) entity);
+      reviewRepository.save(((Review) entity).setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
+              ("yyyy-MM-dd'T'HH:mm:ssZ"))));
     }
     EntityContainer entityContainer = singleEntity.getData();
     entityContainer.setId(entity.getId());

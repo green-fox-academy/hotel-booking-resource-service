@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.Accessors;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -11,6 +12,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 @Entity
+@Accessors(chain = true)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -23,6 +25,6 @@ public class Review extends ResourceEntity{
   private Integer rating;
   @NotNull
   private String description;
-  private String created_at = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
+  private String created_at;
 }
 
