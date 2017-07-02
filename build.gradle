@@ -22,9 +22,6 @@ repositories {
 }
 
 dependencies {
-	compile group: 'org.aspectj', name: 'aspectjrt', version: '1.8.10'
-	compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.8.10'
-	compile group: 'aopalliance', name: 'aopalliance', version: '1.0'
 	compile group: 'com.rabbitmq', name: 'amqp-client', version: '4.1.1'
 	compile('org.springframework.boot:spring-boot-starter-data-jpa')
 	compile('org.springframework.boot:spring-boot-starter-web')
