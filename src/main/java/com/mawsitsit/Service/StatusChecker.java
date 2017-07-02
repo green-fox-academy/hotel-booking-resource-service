@@ -22,12 +22,17 @@ public class StatusChecker {
     this.messageHandler = messageHandler;
   }
 
-  private void checkMQStatus() throws IOException, TimeoutException {
-    if (messageHandler.getCount() == 0) {
-      messageHandler.sendMessage();
-      messageHandler.getMessage();
-      queueStatus = "ok";
-    } else {
+  private void checkMQStatus() {
+    try {
+      if (messageHandler.getCount() == 0) {
+        messageHandler.sendMessage();
+        messageHandler.getMessage();
+        queueStatus = "ok";
+      } else {
+        queueStatus = "error";
+      }
+    } catch (IOException | TimeoutException e) {
+      e.printStackTrace();
       queueStatus = "error";
     }
   }
