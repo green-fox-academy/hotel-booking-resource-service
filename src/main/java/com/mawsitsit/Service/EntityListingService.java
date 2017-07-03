@@ -121,14 +121,9 @@ public class EntityListingService {
     return specs == null ? reviewRepository.findAll(pageable) : reviewRepository.findAll(specs, pageable);
   }
 
-  public <T extends ResourceEntity> EntityList updateEntity(Long id, EntityList<EntityContainer<T>>
-          incomingAttributes, HttpServletRequest request) throws Exception {
+  public <T extends ResourceEntity> EntityList updateEntity(Long id, EntityList<EntityContainer<T>> incomingAttributes, HttpServletRequest request) throws Exception {
     ResourceEntity entityToUpdate = null;
-    if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
-      entityToUpdate = hotelRepository.findOne(id);
-    } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
-      entityToUpdate = reviewRepository.findOne(id);
-    }
+    entityToUpdate = incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class) ? hotelRepository.findOne(id) : reviewRepository.findOne(id);
     if (entityToUpdate == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
@@ -143,12 +138,9 @@ public class EntityListingService {
     if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
       hotelRepository.save((Hotel) entityToUpdate);
       return wrapEntity(getHotel(id), request);
-    } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
+    } else
       reviewRepository.save((Review) entityToUpdate);
       return wrapEntity(getReview(id), request);
-    } else {
-      return null;
-    }
   }
 
   public void deleteHotel(Long id) throws Exception {
