@@ -30,7 +30,7 @@ public class Hotel extends ResourceEntity{
   @NotNull
   private Boolean has_pets;
   @NotNull
-  private Boolean has_restaurant;
+  private Boolean has_restaurant; 
   @NotNull
   private Boolean has_bar;
   @NotNull

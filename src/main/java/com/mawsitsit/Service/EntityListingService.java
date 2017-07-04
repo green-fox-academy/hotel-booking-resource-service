@@ -117,8 +117,8 @@ public class EntityListingService {
     return specs == null ? hotelRepository.findAll(pageable) : hotelRepository.findAll(specs, pageable);
   }
 
-  public Page queryReviews(Specification<ResourceEntity> specs, Pageable pageable) {
-    return specs == null ? reviewRepository.findAll(pageable) : reviewRepository.findAll(specs, pageable);
+  public Page queryReviews(Specification<ResourceEntity> specs, Pageable pageable, Long id) {
+    return specs == null ? reviewRepository.findAllByHotel(hotelRepository.findOne(id), pageable) : reviewRepository.findAllByHotel(hotelRepository.findOne(id), specs, pageable);
   }
 
   public <T extends ResourceEntity> EntityList updateEntity(Long id, EntityList<EntityContainer<T>> incomingAttributes, HttpServletRequest request) throws Exception {

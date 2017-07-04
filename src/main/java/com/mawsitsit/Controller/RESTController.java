@@ -74,11 +74,11 @@ public class RESTController {
     entityListingService.deleteHotel(id);
   }
 
-  @GetMapping(value = "/api/hotels/reviews", produces = "application/vnd.api+json")
-  public EntityList listReviews(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable,
+  @GetMapping(value = "/api/hotels/{id}/reviews", produces = "application/vnd.api+json")
+  public EntityList listReviews(@RequestParam LinkedHashMap<String, Object> allRequestParams,@PathVariable Long id, Pageable pageable,
                                 HttpServletRequest request) {
     return entityListingService.createList(request, entityListingService.queryReviews(parameterHandler.getParameters
-            (allRequestParams), pageable));
+            (allRequestParams), pageable, id));
   }
 
   @ResponseStatus(code = HttpStatus.OK)

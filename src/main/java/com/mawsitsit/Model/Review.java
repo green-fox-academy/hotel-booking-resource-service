@@ -23,7 +23,6 @@ public class Review extends ResourceEntity{
   @NotNull
   private String description;
   private String created_at;
-  @NotNull
   @JsonIgnore
   @ManyToOne(cascade = CascadeType.ALL)
   @JsonUnwrapped
