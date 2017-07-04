@@ -58,7 +58,7 @@ public class RESTController {
   @PostMapping("/api/hotels")
   public EntityList createHotel(@RequestBody @Valid EntityList<EntityContainer<Hotel>> singleHotel, HttpServletRequest
           request) {
-    return entityListingService.addEntity(singleHotel, request);
+    return entityListingService.addEntity(singleHotel, request, null);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
