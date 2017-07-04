@@ -71,14 +71,16 @@ public class EntityListingService {
   }
 
   public <T extends ResourceEntity> EntityList<EntityContainer<T>> addEntity
-          (EntityList<EntityContainer<T>> singleEntity, HttpServletRequest request) {
+          (EntityList<EntityContainer<T>> singleEntity, HttpServletRequest request, Long id) {
     ResourceEntity entity = singleEntity.getData().getAttributes();
     if (entity.getClass().equals(Hotel.class)) {
       hotelRepository.save((Hotel) entity);
     }
     if (entity.getClass().equals(Review.class)) {
-      ((Review) entity).setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
+      Review review = (Review) entity;
+      review.setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
                       ("yyyy-MM-dd'T'HH:mm:ssZ")));
+      review.setHotel(getHotel(id));
       reviewRepository.save((Review)entity);
     }
     EntityContainer entityContainer = singleEntity.getData();

@@ -25,7 +25,6 @@ public class Review extends ResourceEntity{
   private String created_at;
   @JsonIgnore
   @ManyToOne(cascade = CascadeType.ALL)
-  @JsonUnwrapped
   private Hotel hotel;
 }
 

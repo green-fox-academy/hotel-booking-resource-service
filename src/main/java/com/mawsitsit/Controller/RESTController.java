@@ -75,7 +75,7 @@ public class RESTController {
   }
 
   @GetMapping(value = "/api/hotels/{id}/reviews", produces = "application/vnd.api+json")
-  public EntityList listReviews(@RequestParam LinkedHashMap<String, Object> allRequestParams,@PathVariable Long id, Pageable pageable,
+  public EntityList listReviews(@RequestParam LinkedHashMap<String, Object> allRequestParams, @PathVariable Long id, Pageable pageable,
                                 HttpServletRequest request) {
     return entityListingService.createList(request, entityListingService.queryReviews(parameterHandler.getParameters
             (allRequestParams), pageable, id));
@@ -88,10 +88,10 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
-  @PostMapping("/api/hotels/reviews")
-  public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>> singleReview, HttpServletRequest
+  @PostMapping("/api/hotels/{id}/reviews")
+  public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>> singleReview, @PathVariable Long id, HttpServletRequest
           request) {
-    return entityListingService.addEntity(singleReview, request);
+    return entityListingService.addEntity(singleReview, request, id);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
@@ -122,7 +122,7 @@ public class RESTController {
     String requestUri = request.getRequestURI();
     String[] params = requestUri.split("/");
     Response response = new Response();
-    response.addError(new Error(404, "Not Found", String.format("No %s found by id: %s", params[params.length-2],
+    response.addError(new Error(404, "Not Found", String.format("No %s found by id: %s", params[params.length - 2],
             requestUri.substring(requestUri.lastIndexOf('/') + 1))));
     return response;
   }
