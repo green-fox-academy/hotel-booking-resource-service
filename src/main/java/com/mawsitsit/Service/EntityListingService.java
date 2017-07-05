@@ -113,7 +113,19 @@ public class EntityListingService {
     EntityContainer container = new EntityContainer(entity.getClass().getSimpleName(), entity.getId(), entity);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
-    return new EntityList<>(link, container, null, null);
+    if (entity.getClass().equals(Hotel.class)) {
+      Links relationshipLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
+              null, request.getRequestURL().toString() + "reviews");
+      List<EntityContainer> list = new ArrayList<>();
+      for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
+        list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
+      }
+      EntityList entityList = new EntityList(relationshipLinks, null, null, null);
+      Relationships relationships = new Relationships(entityList, list);
+      return new EntityList<>(link, container, relationships, null);
+    } else {
+      return new EntityList<>(link, container, null, null);
+    }
   }
 
   public Page queryHotels(Specification<ResourceEntity> specs, Pageable pageable) {
