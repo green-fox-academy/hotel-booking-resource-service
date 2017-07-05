@@ -1,6 +1,5 @@
 package com.mawsitsit.Model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,9 +14,11 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class EntityList<T> {
+public class EntityList<T, S> {
   private Links links;
   @Valid
   @NotNull
   private T data;
+  private Relationships relationships;
+  private S included;
 }
