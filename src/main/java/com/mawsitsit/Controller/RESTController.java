@@ -82,9 +82,9 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.OK)
-  @GetMapping("/api/hotels/reviews/{review_id}")
-  public EntityList singleReview(@PathVariable Long id, HttpServletRequest request) {
-    return entityListingService.wrapEntity(entityListingService.getReview(id), request);
+  @GetMapping("/api/hotels/reviews/{reviewId}")
+  public EntityList singleReview(@PathVariable Long reviewId, HttpServletRequest request) {
+    return entityListingService.wrapEntity(entityListingService.getReview(reviewId), request);
   }
 
   @ResponseStatus(code = HttpStatus.CREATED)
@@ -95,16 +95,16 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.OK)
-  @PatchMapping("/api/hotels/reviews/{review_id}")
-  public EntityList updateReview(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Review>>
+  @PatchMapping("/api/hotels/reviews/{reviewId}")
+  public EntityList updateReview(@PathVariable Long reviewId, @RequestBody EntityList<EntityContainer<Review>>
           incomingAttributes, HttpServletRequest request) throws Exception {
-    return entityListingService.updateEntity(id, incomingAttributes, request);
+    return entityListingService.updateEntity(reviewId, incomingAttributes, request);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
-  @DeleteMapping("/api/hotels/reviews/{review_id}")
-  public void deleteReview(@PathVariable Long id, HttpServletRequest request) throws Exception {
-    entityListingService.deleteReview(id);
+  @DeleteMapping("/api/hotels/reviews/{reviewId}")
+  public void deleteReview(@PathVariable Long reviewId, HttpServletRequest request) throws Exception {
+    entityListingService.deleteReview(reviewId);
   }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)

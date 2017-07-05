@@ -125,6 +125,15 @@ public class RESTControllerTest_withH2 {
   }
 
   @Test
+  public void testSingleReview_withValidId() throws Exception {
+    mockMvc.perform(get("/api/hotels/reviews/2"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.data.attributes.rating").value(2))
+            .andExpect(jsonPath("$.data.id").value(2));
+  }
+
+  @Test
   public void testSingleHotel_withInvalidId() throws Exception {
     mockMvc.perform(get("/api/hotels/10"))
             .andExpect(status().isNotFound())
