@@ -5,6 +5,7 @@ import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Model.Hotel;
 import com.mawsitsit.Model.EntityContainer;
 import com.mawsitsit.Model.EntityList;
+import com.mawsitsit.Model.Review;
 import com.mawsitsit.Repository.HearthbeatRepository;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Service.MessageHandler;
@@ -124,6 +125,29 @@ public class RESTControllerTest_withMockedRepo {
     String jsonInput = mapper.writeValueAsString(singleHotel);
 
     mockMvc.perform(post("/api/hotels")
+            .contentType(contentType)
+            .content(jsonInput))
+            .andExpect(status().isBadRequest())
+            .andExpect(content().contentType(contentType))
+            .andExpect(jsonPath("$.errors[0].status").value(400))
+            .andExpect(jsonPath("$.errors[0].title").value("Bad Request"))
+            .andExpect(jsonPath("$.errors[0].detail").exists());
+  }
+
+  @Test
+  public void testReviews_withPost_withInvalidReview() throws Exception {
+    Review review = new Review();
+
+    EntityContainer entityContainer = new EntityContainer();
+    entityContainer.setType("review");
+    entityContainer.setAttributes(review);
+
+    EntityList<EntityContainer> singleReview = new EntityList<>(null, entityContainer);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInput = mapper.writeValueAsString(singleReview);
+
+    mockMvc.perform(post("/api/hotels/1/reviews")
             .contentType(contentType)
             .content(jsonInput))
             .andExpect(status().isBadRequest())
