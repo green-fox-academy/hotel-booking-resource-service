@@ -5,6 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Relationships {
-  EntityList reviews;
+public class Relationships<T> {
+  private EntityList reviews;
+  private T data;
 }
