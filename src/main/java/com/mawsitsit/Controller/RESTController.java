@@ -56,14 +56,14 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/api/hotels")
-  public EntityList createHotel(@RequestBody @Valid EntityList<EntityContainer<Hotel>> singleHotel, HttpServletRequest
-          request) {
+  public EntityList createHotel(@RequestBody @Valid EntityList<EntityContainer<Hotel>, Object> singleHotel,
+                                HttpServletRequest request) {
     return entityListingService.addEntity(singleHotel, request, null);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @PatchMapping("/api/hotels/{id}")
-  public EntityList updateHotel(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Hotel>>
+  public EntityList updateHotel(@PathVariable Long id, @RequestBody EntityList<EntityContainer<Hotel>, Object>
           incomingAttributes, HttpServletRequest request) throws Exception {
     return entityListingService.updateEntity(id, incomingAttributes, request);
   }
@@ -90,14 +90,15 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/api/hotels/{id}/reviews")
-  public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>> singleReview, @PathVariable Long id, HttpServletRequest
+  public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>, Object> singleReview,
+                                   @PathVariable Long id, HttpServletRequest
           request) {
     return entityListingService.addEntity(singleReview, request, id);
   }
 
   @ResponseStatus(code = HttpStatus.OK)
   @PatchMapping("/api/hotels/reviews/{reviewId}")
-  public EntityList updateReview(@PathVariable Long reviewId, @RequestBody EntityList<EntityContainer<Review>>
+  public EntityList updateReview(@PathVariable Long reviewId, @RequestBody EntityList<EntityContainer<Review>, Object>
           incomingAttributes, HttpServletRequest request) throws Exception {
     return entityListingService.updateEntity(reviewId, incomingAttributes, request);
   }

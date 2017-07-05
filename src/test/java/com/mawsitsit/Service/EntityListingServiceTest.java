@@ -95,14 +95,14 @@ public class EntityListingServiceTest {
   }
 
   @Test
-  public void testAddHotel_withValidHotel() {
+  public <S> void testAddHotel_withValidHotel() {
     Hotel hotel = initHotel();
 
     EntityContainer entityContainer = new EntityContainer();
     entityContainer.setType("hotel");
     entityContainer.setAttributes(hotel);
 
-    EntityList<EntityContainer<Hotel>> singleHotel = new EntityList<>(null, entityContainer);
+    EntityList<EntityContainer<Hotel>, S> singleHotel = new EntityList<>(null, entityContainer, null, null);
 
     BDDMockito.given(request.getRequestURL()).willReturn(new StringBuffer("testURL"));
     Mockito.doAnswer(invocation -> {

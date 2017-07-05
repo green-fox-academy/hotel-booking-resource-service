@@ -164,10 +164,11 @@ public class RESTControllerTest_withH2 {
   }
 
   @Test
-  public void testUpdateHotel_withValidId() throws Exception {
+  public <S> void testUpdateHotel_withValidId() throws Exception {
     Hotel hotel = initHotel();
     hotel.setLocation("Szeged");
-    EntityList<EntityContainer> entityList = new EntityList<>(null, new EntityContainer("hotel", 1L, hotel));
+    EntityList<EntityContainer, S> entityList = new EntityList<>(null, new EntityContainer("hotel", 1L, hotel),
+            null, null);
 
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(entityList);
@@ -181,10 +182,11 @@ public class RESTControllerTest_withH2 {
   }
 
   @Test
-  public void testUpdateReview_withValidId() throws Exception {
+  public <S> void testUpdateReview_withValidId() throws Exception {
     Review review = initReview();
     review.setRating(4);
-    EntityList<EntityContainer> entityList = new EntityList<>(null, new EntityContainer("review", 1L, review));
+    EntityList<EntityContainer, S> entityList = new EntityList<>(null, new EntityContainer("review", 1L, review),
+            null, null);
 
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(entityList);

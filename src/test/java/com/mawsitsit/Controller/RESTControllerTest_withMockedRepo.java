@@ -112,14 +112,14 @@ public class RESTControllerTest_withMockedRepo {
   }
 
   @Test
-  public void testHotels_withPost_withInvalidHotel() throws Exception {
+  public <S> void testHotels_withPost_withInvalidHotel() throws Exception {
     Hotel hotel = new Hotel();
 
     EntityContainer entityContainer = new EntityContainer();
     entityContainer.setType("hotel");
     entityContainer.setAttributes(hotel);
 
-    EntityList<EntityContainer> singleHotel = new EntityList<>(null, entityContainer);
+    EntityList<EntityContainer, S> singleHotel = new EntityList<>(null, entityContainer, null, null);
 
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(singleHotel);
@@ -135,14 +135,14 @@ public class RESTControllerTest_withMockedRepo {
   }
 
   @Test
-  public void testReviews_withPost_withInvalidReview() throws Exception {
+  public <S> void testReviews_withPost_withInvalidReview() throws Exception {
     Review review = new Review();
 
     EntityContainer entityContainer = new EntityContainer();
     entityContainer.setType("review");
     entityContainer.setAttributes(review);
 
-    EntityList<EntityContainer> singleReview = new EntityList<>(null, entityContainer);
+    EntityList<EntityContainer, S> singleReview = new EntityList<>(null, entityContainer, null, null);
 
     ObjectMapper mapper = new ObjectMapper();
     String jsonInput = mapper.writeValueAsString(singleReview);
