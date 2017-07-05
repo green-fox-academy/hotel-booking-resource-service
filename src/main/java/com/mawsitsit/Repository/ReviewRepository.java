@@ -12,7 +12,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface ReviewRepository extends PagingAndSortingRepository<Review, Long>, JpaSpecificationExecutor<ResourceEntity> {
-  Page findAllByHotel(Hotel hotel, Pageable pageable);
-  Page findAllByHotel(Hotel hotel, Specification specs, Pageable pageable);
-
+  Page findAllByHotel_id(Long id, Pageable pageable);
 }

@@ -5,7 +5,9 @@ import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Model.Hotel;
 import com.mawsitsit.Model.EntityContainer;
 import com.mawsitsit.Model.EntityList;
+import com.mawsitsit.Model.Review;
 import com.mawsitsit.Repository.HotelRepository;
+import com.mawsitsit.Repository.ReviewRepository;
 import com.mawsitsit.Service.MessageHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +25,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.nio.charset.Charset;
 
+import static com.mawsitsit.Service.EntityListingServiceTest.initReview;
 import static org.junit.Assert.*;
 
 import static com.mawsitsit.Service.EntityListingServiceTest.initHotel;
@@ -51,6 +54,9 @@ public class RESTControllerTest_withH2 {
   @Autowired
   private HotelRepository hotelRepository;
 
+  @Autowired
+  private ReviewRepository reviewRepository;
+
   @MockBean
   private MessageHandler messageHandler;
 
@@ -70,6 +76,19 @@ public class RESTControllerTest_withH2 {
     hotelRepository.save(hotel2);
     hotelRepository.save(hotel3);
     hotelRepository.save(hotel4);
+
+    Review review1 = initReview();
+    review1.setHotel(hotelRepository.findOne(1L));
+    Review review2 = initReview();
+    review2.setHotel(hotelRepository.findOne(1L));
+    review2.setRating(2);
+    Review review3 = initReview();
+    review3.setHotel(hotelRepository.findOne(1L));
+    review3.setRating(2);
+    review3.setDescription("Bad");
+    reviewRepository.save(review1);
+    reviewRepository.save(review2);
+    reviewRepository.save(review3);
   }
 
   @Test
@@ -78,6 +97,14 @@ public class RESTControllerTest_withH2 {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[2]").exists())
             .andExpect(jsonPath("$.data[3]").doesNotExist());
+  }
+
+  @Test
+  public void testReviews_withOneFilterParam() throws Exception {
+    mockMvc.perform(get("/api/hotels/1/reviews?rating=2"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data[1]").exists())
+            .andExpect(jsonPath("$.data[2]").doesNotExist());
   }
 
   @Test
@@ -108,8 +135,8 @@ public class RESTControllerTest_withH2 {
 
   @Test
   public void testDeleteHotel_withValidId() throws Exception {
-    mockMvc.perform(delete("/api/hotels/1"));
-    assertEquals(null, hotelRepository.findOne(1L));
+    mockMvc.perform(delete("/api/hotels/2"));
+    assertEquals(null, hotelRepository.findOne(2L));
   }
 
   @Test

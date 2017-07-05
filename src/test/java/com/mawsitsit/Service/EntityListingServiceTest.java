@@ -3,6 +3,7 @@ package com.mawsitsit.Service;
 import com.mawsitsit.Model.Hotel;
 import com.mawsitsit.Model.EntityContainer;
 import com.mawsitsit.Model.EntityList;
+import com.mawsitsit.Model.Review;
 import com.mawsitsit.Repository.HotelRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -110,10 +111,10 @@ public class EntityListingServiceTest {
     }).when(hotelRepository).save(hotel);
 
     Long id = 1L;
-    assertEquals(entityListingService.addEntity(singleHotel, request).getData().getId(), id);
-    assertNotNull(entityListingService.addEntity(singleHotel, request).getLinks().getSelf());
-    assertNull(entityListingService.addEntity(singleHotel, request).getLinks().getNext());
-    assertEquals(entityListingService.addEntity(singleHotel, request).getData().getAttributes().getHas_air_conditioning
+    assertEquals(entityListingService.addEntity(singleHotel, request, null).getData().getId(), id);
+    assertNotNull(entityListingService.addEntity(singleHotel, request, null).getLinks().getSelf());
+    assertNull(entityListingService.addEntity(singleHotel, request, null).getLinks().getNext());
+    assertEquals(entityListingService.addEntity(singleHotel, request, null).getData().getAttributes().getHas_air_conditioning
             (), true);
   }
 
@@ -133,5 +134,13 @@ public class EntityListingServiceTest {
     hotel.setMeal_plan("mealplan");
     hotel.setStars(5);
     return hotel;
+  }
+
+  public static Review initReview(){
+    Review review = new Review();
+    review.setCreated_at("today");
+    review.setDescription("Shitty place, grumpy people");
+    review.setRating(1);
+    return review;
   }
 }

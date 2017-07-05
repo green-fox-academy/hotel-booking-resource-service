@@ -8,6 +8,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -79,9 +80,9 @@ public class EntityListingService {
     if (entity.getClass().equals(Review.class)) {
       Review review = (Review) entity;
       review.setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
-                      ("yyyy-MM-dd'T'HH:mm:ssZ")));
+              ("yyyy-MM-dd'T'HH:mm:ssZ")));
       review.setHotel(getHotel(id));
-      reviewRepository.save((Review)entity);
+      reviewRepository.save((Review) entity);
     }
     EntityContainer entityContainer = singleEntity.getData();
     entityContainer.setId(entity.getId());
@@ -120,7 +121,12 @@ public class EntityListingService {
   }
 
   public Page queryReviews(Specification<ResourceEntity> specs, Pageable pageable, Long id) {
-    return specs == null ? reviewRepository.findAllByHotel(hotelRepository.findOne(id), pageable) : reviewRepository.findAllByHotel(hotelRepository.findOne(id), specs, pageable);
+    if (specs == null) {
+      return reviewRepository.findAllByHotel_id(id, pageable);
+    } else {
+      specs = Specifications.where(SpecificationBuilder.withParameter("hotel", id)).and(specs);
+      return reviewRepository.findAll(specs, pageable);
+    }
   }
 
   public <T extends ResourceEntity> EntityList updateEntity(Long id, EntityList<EntityContainer<T>> incomingAttributes, HttpServletRequest request) throws Exception {
@@ -141,7 +147,7 @@ public class EntityListingService {
       return wrapEntity(getHotel(id), request);
     } else
       reviewRepository.save((Review) entityToUpdate);
-      return wrapEntity(getReview(id), request);
+    return wrapEntity(getReview(id), request);
   }
 
   public void deleteHotel(Long id) throws Exception {
