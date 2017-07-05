@@ -143,9 +143,24 @@ public class RESTControllerTest_withH2 {
   }
 
   @Test
+  public void testSingleReview_withInvalidId() throws Exception {
+    mockMvc.perform(get("/api/hotels/reviews/10"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.errors[0].status").value(404))
+            .andExpect(jsonPath("$.errors[0].title").value("Not Found"))
+            .andExpect(jsonPath("$.errors[0].detail").value("No reviews found by id: 10"));
+  }
+
+  @Test
   public void testDeleteHotel_withValidId() throws Exception {
     mockMvc.perform(delete("/api/hotels/2"));
     assertEquals(null, hotelRepository.findOne(2L));
+  }
+
+  @Test
+  public void testDeleteReview_withValidId() throws Exception {
+    mockMvc.perform(delete("/api/hotels/reviews/2"));
+    assertEquals(null, reviewRepository.findOne(2L));
   }
 
   @Test
@@ -162,6 +177,23 @@ public class RESTControllerTest_withH2 {
             .content(jsonInput))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.attributes.location").value("Szeged"))
+            .andExpect(jsonPath("$.data.id").value(1));
+  }
+
+  @Test
+  public void testUpdateReview_withValidId() throws Exception {
+    Review review = initReview();
+    review.setRating(4);
+    EntityList<EntityContainer> entityList = new EntityList<>(null, new EntityContainer("review", 1L, review));
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInput = mapper.writeValueAsString(entityList);
+
+    mockMvc.perform(patch("/api/hotels/reviews/1")
+            .contentType(contentType)
+            .content(jsonInput))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.attributes.rating").value(4))
             .andExpect(jsonPath("$.data.id").value(1));
   }
 }
