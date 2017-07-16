@@ -18,27 +18,11 @@ public class Hotel extends ResourceEntity{
   @GeneratedValue (strategy = GenerationType.AUTO)
   private Long id;
   @NotNull
-  private String location;
+  private String location, name, main_image_src;
   @NotNull
-  private String name;
+  private Boolean has_wifi, has_parking, has_pets, has_restaurant;
   @NotNull
-  private String main_image_src;
-  @NotNull
-  private Boolean has_wifi;
-  @NotNull
-  private Boolean has_parking;
-  @NotNull
-  private Boolean has_pets;
-  @NotNull
-  private Boolean has_restaurant; 
-  @NotNull
-  private Boolean has_bar;
-  @NotNull
-  private Boolean has_swimming_pool;
-  @NotNull
-  private Boolean has_air_conditioning;
-  @NotNull
-  private Boolean has_gym;
+  private Boolean has_bar, has_swimming_pool, has_air_conditioning, has_gym;
   @NotNull
   private String meal_plan;
   @NotNull
