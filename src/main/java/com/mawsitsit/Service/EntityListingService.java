@@ -8,7 +8,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -109,20 +108,20 @@ public class EntityListingService {
     return review;
   }
 
-  public <T extends ResourceEntity, S> EntityList<EntityContainer, S> wrapEntity(T entity, HttpServletRequest request) {
+  public <T extends ResourceEntity, S> EntityList wrapEntity(T entity, HttpServletRequest request) {
     EntityContainer container = new EntityContainer(entity.getClass().getSimpleName(), entity.getId(), entity);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     if (entity.getClass().equals(Hotel.class)) {
       Links relationshipLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
-              null, request.getRequestURL().toString() + "reviews");
+              null, request.getRequestURL().toString() + "/reviews");
       List<EntityContainer> list = new ArrayList<>();
       for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
         list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
       }
       EntityList entityList = new EntityList(relationshipLinks, null, null, null);
       Relationships relationships = new Relationships(entityList, list);
-      return new EntityList<>(link, container, relationships, null);
+      return new EntityList<>(link, container, relationships, reviewRepository.findAllByHotel_id(entity.getId()));
     } else {
       return new EntityList<>(link, container, null, null);
     }

@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Getter
 @Setter
@@ -20,5 +21,5 @@ public class EntityList<T, S> {
   @NotNull
   private T data;
   private Relationships relationships;
-  private S included;
+  private List<S> included;
 }
