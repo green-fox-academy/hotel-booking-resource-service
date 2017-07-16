@@ -26,16 +26,16 @@ public class EntityListingService {
   @Autowired
   private ReviewRepository reviewRepository;
 
-  public <S> EntityList<List<EntityContainer>, S> createList(HttpServletRequest request, Page page) {
+  public <S> EntityList<List<EntityContainer<ResourceEntity>>, S> createList(HttpServletRequest request, Page page) {
     List<ResourceEntity> entities = page.getContent();
-    List<EntityContainer> entityContainers = new ArrayList();
+    List<EntityContainer<ResourceEntity>> entityContainers = new ArrayList<>();
     for (ResourceEntity entity : entities) {
-      entityContainers.add(new EntityContainer(entity.getClass().getSimpleName(), entity.getId(), entity));
+      entityContainers.add(new EntityContainer<>(entity.getClass().getSimpleName(), entity.getId(), entity));
     }
-    return new EntityList(linkBuilder(request, page), entityContainers, null, null);
+    return new EntityList<>(linkBuilder(request, page), entityContainers, null, null);
   }
 
-  public Links linkBuilder(HttpServletRequest request, Page page) {
+  private Links linkBuilder(HttpServletRequest request, Page page) {
     Links links = new Links();
     String requestURL = request.getRequestURL().toString();
     String query = request.getQueryString();
@@ -81,9 +81,9 @@ public class EntityListingService {
       review.setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
               ("yyyy-MM-dd'T'HH:mm:ssZ")));
       review.setHotel(getHotel(id));
-      reviewRepository.save((Review) entity);
+      reviewRepository.save(review);
     }
-    EntityContainer entityContainer = singleEntity.getData();
+    EntityContainer<T> entityContainer = singleEntity.getData();
     entityContainer.setId(entity.getId());
     singleEntity.setData(entityContainer);
     Links link = new Links();
@@ -109,7 +109,7 @@ public class EntityListingService {
   }
 
   public <T extends ResourceEntity, S> EntityList wrapEntity(T entity, HttpServletRequest request) {
-    EntityContainer container = new EntityContainer(entity.getClass().getSimpleName(), entity.getId(), entity);
+    EntityContainer<T> container = new EntityContainer<>(entity.getClass().getSimpleName(), entity.getId(), entity);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     if (entity.getClass().equals(Hotel.class)) {
@@ -120,7 +120,7 @@ public class EntityListingService {
         list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
       }
       EntityList entityList = new EntityList(relationshipLinks, null, null, null);
-      Relationships relationships = new Relationships(entityList, list);
+      Relationships<List<EntityContainer>> relationships = new Relationships<>(entityList, list);
       return new EntityList<>(link, container, relationships, reviewRepository.findAllByHotel_id(entity.getId()));
     } else {
       return new EntityList<>(link, container, null, null);
