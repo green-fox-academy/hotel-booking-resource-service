@@ -131,23 +131,26 @@ public class EntityListingService {
     return review;
   }
 
-  public <T extends ResourceEntity, S> EntityList wrapEntity(T entity, HttpServletRequest request) {
+  public <T extends ResourceEntity> EntityList wrapEntity(T entity, HttpServletRequest request) {
     EntityContainer<T> container = new EntityContainer<>(entity.getClass().getSimpleName(), entity.getId(), entity);
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     if (entity.getClass().equals(Hotel.class)) {
-      Links relationshipLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
-              null, request.getRequestURL().toString() + "/reviews");
-      List<EntityContainer> list = new ArrayList<>();
-      for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
-        list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
-      }
-      EntityList entityList = new EntityList(relationshipLinks, null, null, null);
-      Relationships<List<EntityContainer>> relationships = new Relationships<>(entityList, list);
-      return new EntityList<>(link, container, relationships, reviewRepository.findAllByHotel_id(entity.getId()));
+      return new EntityList<>(link, container, getHotelRelationships(request, entity), reviewRepository.findAllByHotel_id(entity.getId()));
     } else {
       return new EntityList<>(link, container, null, null);
     }
+  }
+
+  private <T extends ResourceEntity> Relationships getHotelRelationships(HttpServletRequest request, T entity){
+    Links relationshipLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
+            null, request.getRequestURL().toString() + "/reviews");
+    List<EntityContainer> list = new ArrayList<>();
+    for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
+      list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
+    }
+    EntityList entityList = new EntityList(relationshipLinks, null, null, null);
+    return new Relationships<>(entityList, list);
   }
 
   public Page queryHotels(Specification<ResourceEntity> specs, Pageable pageable) {
