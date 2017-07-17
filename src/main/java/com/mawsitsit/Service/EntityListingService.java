@@ -83,17 +83,8 @@ public class EntityListingService {
 
   public <T extends ResourceEntity, S> EntityList<EntityContainer<T>, S> addEntity
           (EntityList<EntityContainer<T>, S> singleEntity, HttpServletRequest request, Long id) {
-    ResourceEntity entity = singleEntity.getData().getAttributes();
-    if (entity.getClass().equals(Hotel.class)) {
-      hotelRepository.save((Hotel) entity);
-    }
-    if (entity.getClass().equals(Review.class)) {
-      Review review = (Review) entity;
-      review.setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
-              ("yyyy-MM-dd'T'HH:mm:ssZ")));
-      review.setHotel(getHotel(id));
-      reviewRepository.save(review);
-    }
+    ResourceEntity entity = setResourceEntity(singleEntity, id);
+    saveEntity(entity);
     EntityContainer<T> entityContainer = singleEntity.getData();
     entityContainer.setId(entity.getId());
     singleEntity.setData(entityContainer);
@@ -102,6 +93,27 @@ public class EntityListingService {
     singleEntity.setLinks(link);
     return singleEntity;
   }
+
+  private void saveEntity(ResourceEntity entity) {
+    if (entity.getClass().equals(Hotel.class)) {
+      hotelRepository.save((Hotel) entity);
+    } else if (entity.getClass().equals(Review.class)) {
+      reviewRepository.save((Review) entity);
+    }
+  }
+
+  private <T extends ResourceEntity, S> ResourceEntity setResourceEntity(EntityList<EntityContainer<T>, S> singleEntity, Long id) {
+    ResourceEntity entity = singleEntity.getData().getAttributes();
+    if (entity.getClass().equals(Review.class)) {
+      Review review = (Review) entity;
+      review.setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
+              ("yyyy-MM-dd'T'HH:mm:ssZ")));
+      review.setHotel(getHotel(id));
+      entity = review;
+    }
+    return entity;
+  }
+
 
   public Hotel getHotel(Long id) throws EmptyResultDataAccessException {
     Hotel hotel = hotelRepository.findOne(id);

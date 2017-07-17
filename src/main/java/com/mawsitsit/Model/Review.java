@@ -16,7 +16,7 @@ import javax.validation.constraints.NotNull;
 public class Review extends ResourceEntity{
   @JsonIgnore
   @Id
-  @GeneratedValue (strategy = GenerationType.AUTO)
+  @GeneratedValue (strategy = GenerationType.IDENTITY)
   private Long id;
   @NotNull
   private Integer rating;
