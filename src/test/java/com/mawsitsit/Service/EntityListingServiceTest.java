@@ -1,8 +1,9 @@
 package com.mawsitsit.Service;
 
 import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
-import com.mawsitsit.Model.HotelList;
+import com.mawsitsit.Model.EntityContainer;
+import com.mawsitsit.Model.EntityList;
+import com.mawsitsit.Model.Review;
 import com.mawsitsit.Repository.HotelRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,10 +22,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HotelListingServiceTest {
+public class EntityListingServiceTest {
 
   @InjectMocks
-  private HotelListingService hotelListingService;
+  private EntityListingService entityListingService;
 
   @Mock
   private HotelRepository hotelRepository;
@@ -51,10 +52,10 @@ public class HotelListingServiceTest {
 
     BDDMockito.given(request.getRequestURL()).willReturn(new StringBuffer("testURL"));
 
-    assertEquals("testURL", hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getSelf());
-    assertEquals("testURL?page=1", hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getNext());
-    assertEquals("testURL?page=2", hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getLast());
-    assertNull(hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getPrev());
+    assertEquals("testURL", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getSelf());
+    assertEquals("testURL?page=1", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getNext());
+    assertEquals("testURL?page=2", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getLast());
+    assertNull(entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getPrev());
   }
 
   @Test
@@ -66,10 +67,10 @@ public class HotelListingServiceTest {
     BDDMockito.given(request.getRequestURL()).willReturn(new StringBuffer("testURL"));
     BDDMockito.given(request.getQueryString()).willReturn("page=1");
 
-    assertEquals("testURL?page=1", hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getSelf());
-    assertEquals("testURL?page=2", hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getNext());
-    assertEquals("testURL?page=2", hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getLast());
-    assertEquals("testURL?page=0", hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getPrev());
+    assertEquals("testURL?page=1", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getSelf());
+    assertEquals("testURL?page=2", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getNext());
+    assertEquals("testURL?page=2", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getLast());
+    assertEquals("testURL?page=0", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getPrev());
   }
 
   @Test
@@ -83,25 +84,25 @@ public class HotelListingServiceTest {
 
     Long id = 41L;
 
-    assertEquals("testURL?page=4", hotelListingService.createList(request, hotelListingService.query(null,pageable))
+    assertEquals("testURL?page=4", entityListingService.createList(request, entityListingService.queryHotels(null,pageable))
             .getLinks()
             .getSelf());
-    assertNull(hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getNext());
-    assertNull(hotelListingService.createList(request, hotelListingService.query(null,pageable)).getLinks().getLast());
-    assertEquals("testURL?page=3", hotelListingService.createList(request, hotelListingService.query(null,pageable)
+    assertNull(entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getNext());
+    assertNull(entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getLinks().getLast());
+    assertEquals("testURL?page=3", entityListingService.createList(request, entityListingService.queryHotels(null,pageable)
     ).getLinks().getPrev());
-    assertEquals(id, hotelListingService.createList(request, hotelListingService.query(null,pageable)).getData().get(0).getId());
+    assertEquals(id, entityListingService.createList(request, entityListingService.queryHotels(null,pageable)).getData().get(0).getId());
   }
 
   @Test
-  public void testAddHotel_withValidHotel() {
+  public <S> void testAddHotel_withValidHotel() {
     Hotel hotel = initHotel();
 
-    HotelContainer hotelContainer = new HotelContainer();
-    hotelContainer.setType("hotel");
-    hotelContainer.setAttributes(hotel);
+    EntityContainer entityContainer = new EntityContainer();
+    entityContainer.setType("hotel");
+    entityContainer.setAttributes(hotel);
 
-    HotelList<HotelContainer> singleHotel = new HotelList<>(null, hotelContainer);
+    EntityList<EntityContainer<Hotel>, S> singleHotel = new EntityList<>(null, entityContainer, null, null);
 
     BDDMockito.given(request.getRequestURL()).willReturn(new StringBuffer("testURL"));
     Mockito.doAnswer(invocation -> {
@@ -110,10 +111,10 @@ public class HotelListingServiceTest {
     }).when(hotelRepository).save(hotel);
 
     Long id = 1L;
-    assertEquals(hotelListingService.addHotel(singleHotel, request).getData().getId(), id);
-    assertNotNull(hotelListingService.addHotel(singleHotel, request).getLinks().getSelf());
-    assertNull(hotelListingService.addHotel(singleHotel, request).getLinks().getNext());
-    assertEquals(hotelListingService.addHotel(singleHotel, request).getData().getAttributes().getHas_air_conditioning
+    assertEquals(entityListingService.addEntity(singleHotel, request, null).getData().getId(), id);
+    assertNotNull(entityListingService.addEntity(singleHotel, request, null).getLinks().getSelf());
+    assertNull(entityListingService.addEntity(singleHotel, request, null).getLinks().getNext());
+    assertEquals(entityListingService.addEntity(singleHotel, request, null).getData().getAttributes().getHas_air_conditioning
             (), true);
   }
 
@@ -133,5 +134,13 @@ public class HotelListingServiceTest {
     hotel.setMeal_plan("mealplan");
     hotel.setStars(5);
     return hotel;
+  }
+
+  public static Review initReview(){
+    Review review = new Review();
+    review.setCreated_at("today");
+    review.setDescription("Shitty place, grumpy people");
+    review.setRating(1);
+    return review;
   }
 }

@@ -3,9 +3,11 @@ package com.mawsitsit.Controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mawsitsit.BookingresourceApplication;
 import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.HotelContainer;
-import com.mawsitsit.Model.HotelList;
+import com.mawsitsit.Model.EntityContainer;
+import com.mawsitsit.Model.EntityList;
+import com.mawsitsit.Model.Review;
 import com.mawsitsit.Repository.HotelRepository;
+import com.mawsitsit.Repository.ReviewRepository;
 import com.mawsitsit.Service.MessageHandler;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,9 +25,10 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.nio.charset.Charset;
 
+import static com.mawsitsit.Service.EntityListingServiceTest.initReview;
 import static org.junit.Assert.*;
 
-import static com.mawsitsit.Service.HotelListingServiceTest.initHotel;
+import static com.mawsitsit.Service.EntityListingServiceTest.initHotel;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -51,6 +54,9 @@ public class RESTControllerTest_withH2 {
   @Autowired
   private HotelRepository hotelRepository;
 
+  @Autowired
+  private ReviewRepository reviewRepository;
+
   @MockBean
   private MessageHandler messageHandler;
 
@@ -70,6 +76,19 @@ public class RESTControllerTest_withH2 {
     hotelRepository.save(hotel2);
     hotelRepository.save(hotel3);
     hotelRepository.save(hotel4);
+
+    Review review1 = initReview();
+    review1.setHotel(hotelRepository.findOne(1L));
+    Review review2 = initReview();
+    review2.setHotel(hotelRepository.findOne(1L));
+    review2.setRating(2);
+    Review review3 = initReview();
+    review3.setHotel(hotelRepository.findOne(1L));
+    review3.setRating(2);
+    review3.setDescription("Bad");
+    reviewRepository.save(review1);
+    reviewRepository.save(review2);
+    reviewRepository.save(review3);
   }
 
   @Test
@@ -78,6 +97,14 @@ public class RESTControllerTest_withH2 {
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[2]").exists())
             .andExpect(jsonPath("$.data[3]").doesNotExist());
+  }
+
+  @Test
+  public void testReviews_withOneFilterParam() throws Exception {
+    mockMvc.perform(get("/api/hotels/1/reviews?rating=2"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data[1]").exists())
+            .andExpect(jsonPath("$.data[2]").doesNotExist());
   }
 
   @Test
@@ -98,34 +125,77 @@ public class RESTControllerTest_withH2 {
   }
 
   @Test
+  public void testSingleReview_withValidId() throws Exception {
+    mockMvc.perform(get("/api/hotels/reviews/2"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.data.attributes.rating").value(2))
+            .andExpect(jsonPath("$.data.id").value(2));
+  }
+
+  @Test
   public void testSingleHotel_withInvalidId() throws Exception {
     mockMvc.perform(get("/api/hotels/10"))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.errors[0].status").value(404))
             .andExpect(jsonPath("$.errors[0].title").value("Not Found"))
-            .andExpect(jsonPath("$.errors[0].detail").value("No hotel found by id: 10"));
+            .andExpect(jsonPath("$.errors[0].detail").value("No hotels found by id: 10"));
+  }
+
+  @Test
+  public void testSingleReview_withInvalidId() throws Exception {
+    mockMvc.perform(get("/api/hotels/reviews/10"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.errors[0].status").value(404))
+            .andExpect(jsonPath("$.errors[0].title").value("Not Found"))
+            .andExpect(jsonPath("$.errors[0].detail").value("No reviews found by id: 10"));
   }
 
   @Test
   public void testDeleteHotel_withValidId() throws Exception {
-    mockMvc.perform(delete("/api/hotels/1"));
-    assertEquals(null, hotelRepository.findOne(1L));
+    mockMvc.perform(delete("/api/hotels/2"));
+    assertEquals(null, hotelRepository.findOne(2L));
   }
 
   @Test
-  public void testUpdateHotel_withValidId() throws Exception {
+  public void testDeleteReview_withValidId() throws Exception {
+    mockMvc.perform(delete("/api/hotels/reviews/2"));
+    assertEquals(null, reviewRepository.findOne(2L));
+  }
+
+  @Test
+  public <S> void testUpdateHotel_withValidId() throws Exception {
     Hotel hotel = initHotel();
     hotel.setLocation("Szeged");
-    HotelList<HotelContainer> hotelList = new HotelList<>(null, new HotelContainer("hotel", 1L, hotel));
+    EntityList<EntityContainer, S> entityList = new EntityList<>(null, new EntityContainer("hotel", 1L, hotel),
+            null, null);
 
     ObjectMapper mapper = new ObjectMapper();
-    String jsonInput = mapper.writeValueAsString(hotelList);
+    String jsonInput = mapper.writeValueAsString(entityList);
 
     mockMvc.perform(patch("/api/hotels/1")
             .contentType(contentType)
             .content(jsonInput))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.attributes.location").value("Szeged"))
+            .andExpect(jsonPath("$.data.id").value(1));
+  }
+
+  @Test
+  public <S> void testUpdateReview_withValidId() throws Exception {
+    Review review = initReview();
+    review.setRating(4);
+    EntityList<EntityContainer, S> entityList = new EntityList<>(null, new EntityContainer("review", 1L, review),
+            null, null);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInput = mapper.writeValueAsString(entityList);
+
+    mockMvc.perform(patch("/api/hotels/reviews/1")
+            .contentType(contentType)
+            .content(jsonInput))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.attributes.rating").value(4))
             .andExpect(jsonPath("$.data.id").value(1));
   }
 }

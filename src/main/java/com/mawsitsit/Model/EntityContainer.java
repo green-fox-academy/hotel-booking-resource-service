@@ -1,5 +1,6 @@
 package com.mawsitsit.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,9 +13,11 @@ import javax.validation.constraints.NotNull;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HotelList<T> {
-  private Links links;
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class EntityContainer<T> {
+  private String type;
+  private Long id;
   @Valid
   @NotNull
-  private T data;
+  private T attributes;
 }

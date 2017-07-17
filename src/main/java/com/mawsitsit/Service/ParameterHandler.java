@@ -1,6 +1,6 @@
 package com.mawsitsit.Service;
 
-import com.mawsitsit.Model.Hotel;
+import com.mawsitsit.Model.ResourceEntity;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.stereotype.Service;
@@ -12,11 +12,11 @@ import java.util.List;
 @Service
 public class ParameterHandler {
 
-  public Specification<Hotel> getParameters(LinkedHashMap<String, Object> params) {
+  public Specification<ResourceEntity> getParameters(LinkedHashMap<String, Object> params) {
     params = castBooleans(params);
     List<String> keySet = new ArrayList<>(params.keySet());
     try {
-      Specification<Hotel> query = SpecificationBuilder.withParameter(keySet.get(0), params.get(keySet.get(0)));
+      Specification<ResourceEntity> query = SpecificationBuilder.withParameter(keySet.get(0), params.get(keySet.get(0)));
       for (int i = 1; i < keySet.size(); i++) {
         query = Specifications.where(query).and(SpecificationBuilder.withParameter(keySet.get(i), params.get(keySet.get
                 (i))));
