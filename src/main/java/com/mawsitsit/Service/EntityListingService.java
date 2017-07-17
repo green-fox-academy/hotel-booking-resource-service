@@ -142,7 +142,7 @@ public class EntityListingService {
     }
   }
 
-  private <T extends ResourceEntity> Relationships getHotelRelationships(HttpServletRequest request, T entity){
+  private <T extends ResourceEntity> Relationships getHotelRelationships(HttpServletRequest request, T entity) {
     Links relationshipLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
             null, request.getRequestURL().toString() + "/reviews");
     List<EntityContainer> list = new ArrayList<>();
@@ -167,6 +167,17 @@ public class EntityListingService {
     if (entityToUpdate == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
+    entityToUpdate = updateField(incomingAttributes, entityToUpdate);
+    if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
+      hotelRepository.save((Hotel) entityToUpdate);
+      return wrapEntity(getHotel(id), request);
+    } else
+      reviewRepository.save((Review) entityToUpdate);
+    return wrapEntity(getReview(id), request);
+  }
+
+  private <T extends ResourceEntity, S> ResourceEntity updateField(EntityList<EntityContainer<T>, S> incomingAttributes,
+                                                                   ResourceEntity entityToUpdate) throws IllegalAccessException {
     ResourceEntity incomingEntity = incomingAttributes.getData().getAttributes();
     Field[] fields = incomingEntity.getClass().getDeclaredFields();
     for (Field field : fields) {
@@ -175,12 +186,7 @@ public class EntityListingService {
         field.set(entityToUpdate, field.get(incomingEntity));
       }
     }
-    if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
-      hotelRepository.save((Hotel) entityToUpdate);
-      return wrapEntity(getHotel(id), request);
-    } else
-      reviewRepository.save((Review) entityToUpdate);
-    return wrapEntity(getReview(id), request);
+    return entityToUpdate;
   }
 
   public void deleteHotel(Long id) throws Exception {
