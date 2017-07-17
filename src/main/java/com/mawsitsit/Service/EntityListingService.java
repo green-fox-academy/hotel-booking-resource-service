@@ -42,6 +42,13 @@ public class EntityListingService {
     int pageNumber = page.getNumber();
     int totalPage = page.getTotalPages();
 
+    links = setPreviousAndSelf(page, query, requestURL, links, pageNumber);
+    links = setNextAndLast(page, query, requestURL, links, pageNumber, totalPage);
+
+    return links;
+  }
+
+  private Links setPreviousAndSelf(Page page, String query, String requestURL, Links links, int pageNumber) {
     if (page.hasPrevious()) {
       links.setSelf(requestURL + "?" + query);
       links.setPrev(requestURL + "?" + query.replaceFirst(String.valueOf
@@ -53,6 +60,10 @@ public class EntityListingService {
         links.setSelf(requestURL + "?" + query);
       }
     }
+    return links;
+  }
+
+  private Links setNextAndLast(Page page, String query, String requestURL, Links links, int pageNumber, int totalPage) {
     if (page.hasNext()) {
       if (query == null) {
         links.setNext(requestURL + "?page=" + (pageNumber + 1));
