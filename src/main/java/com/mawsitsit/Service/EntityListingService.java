@@ -136,7 +136,7 @@ public class EntityListingService {
     Links link = new Links();
     link.setSelf(request.getRequestURL().toString());
     if (entity.getClass().equals(Hotel.class)) {
-      return new EntityList<>(link, container, getHotelRelationships(request, entity), reviewRepository.findAllByHotel_id(entity.getId()));
+      return new EntityList<>(link, container, getHotelRelationships(request, entity), getHotelIncluded(entity));
     } else {
       return new EntityList<>(link, container, null, null);
     }
@@ -151,6 +151,14 @@ public class EntityListingService {
     }
     EntityList entityList = new EntityList(relationshipLinks, null, null, null);
     return new Relationships<>(entityList, list);
+  }
+
+  private <T extends ResourceEntity> List<EntityContainer<Review>> getHotelIncluded(T entity) {
+    List<EntityContainer<Review>> entityContainers = new ArrayList<>();
+    for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
+      entityContainers.add(new EntityContainer<>(review.getClass().getSimpleName(), review.getId(), review));
+    }
+    return entityContainers;
   }
 
   public Page queryHotels(Specification<ResourceEntity> specs, Pageable pageable) {

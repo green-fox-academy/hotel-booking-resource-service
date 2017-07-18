@@ -140,7 +140,7 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.data").exists())
             .andExpect(jsonPath("$.data.id").value(1))
             .andExpect(jsonPath("$.relationships.data[0].id").value(1))
-            .andExpect(jsonPath("$.included[0].rating").value(1));
+            .andExpect(jsonPath("$.included[0].attributes.rating").value(1));
   }
 
   @Test
