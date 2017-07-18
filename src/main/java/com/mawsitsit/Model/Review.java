@@ -5,9 +5,12 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -16,7 +19,8 @@ import javax.validation.constraints.NotNull;
 public class Review extends ResourceEntity{
   @JsonIgnore
   @Id
-  @GeneratedValue (strategy = GenerationType.IDENTITY)
+  @GenericGenerator(name = "generator",strategy = "increment")
+  @GeneratedValue(generator = "generator")
   private Long id;
   @NotNull
   private Integer rating;
@@ -26,5 +30,10 @@ public class Review extends ResourceEntity{
   @JsonIgnore
   @ManyToOne(cascade = CascadeType.MERGE)
   private Hotel hotel;
+
+  @PrePersist
+  public void prePersist() {
+    created_at = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
+  }
 }
 

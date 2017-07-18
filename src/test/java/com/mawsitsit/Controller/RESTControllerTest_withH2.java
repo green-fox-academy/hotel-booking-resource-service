@@ -84,11 +84,15 @@ public class RESTControllerTest_withH2 {
     review2.setRating(2);
     Review review3 = initReview();
     review3.setHotel(hotelRepository.findOne(1L));
-    review3.setRating(2);
+    review3.setRating(3);
     review3.setDescription("Bad");
+    Review review4 = initReview();
+    review4.setRating(2);
+    review4.setHotel(hotelRepository.findOne(1L));
     reviewRepository.save(review1);
     reviewRepository.save(review2);
     reviewRepository.save(review3);
+    reviewRepository.save(review4);
   }
 
   @Test
@@ -131,6 +135,18 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.data").exists())
             .andExpect(jsonPath("$.data.attributes.rating").value(2))
             .andExpect(jsonPath("$.data.id").value(2));
+  }
+
+  @Test
+  public void testSingleHotel_withRelationship() throws Exception {
+    mockMvc.perform(get("/api/hotels/1"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data").exists())
+            .andExpect(jsonPath("$.data.id").value(1))
+            .andExpect(jsonPath("$.data.attributes.average_rating").value(2.0))
+            .andExpect(jsonPath("$.relationships.data[0].id").value(1))
+            .andExpect(jsonPath("$.included[0].attributes.rating").value(1))
+            .andExpect(jsonPath("$.included[1].attributes.rating").exists());
   }
 
   @Test
