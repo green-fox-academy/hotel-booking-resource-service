@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,5 +26,7 @@ public class Hotel extends ResourceEntity{
   private String meal_plan;
   @NotNull
   private Integer stars;
+  @Formula("(select AVG(r.rating) FROM review r WHERE r.hotel_id=id)")
+  private Double average_rating;
 }
 

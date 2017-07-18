@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -16,7 +17,8 @@ import javax.validation.constraints.NotNull;
 public class Review extends ResourceEntity{
   @JsonIgnore
   @Id
-  @GeneratedValue (strategy = GenerationType.IDENTITY)
+  @GenericGenerator(name = "generator",strategy = "increment")
+  @GeneratedValue(generator = "generator")
   private Long id;
   @NotNull
   private Integer rating;
