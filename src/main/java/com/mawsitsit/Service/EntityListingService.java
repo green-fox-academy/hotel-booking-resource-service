@@ -106,8 +106,6 @@ public class EntityListingService {
     ResourceEntity entity = singleEntity.getData().getAttributes();
     if (entity.getClass().equals(Review.class)) {
       Review review = (Review) entity;
-      review.setCreated_at(ZonedDateTime.now().format(DateTimeFormatter.ofPattern
-              ("yyyy-MM-dd'T'HH:mm:ssZ")));
       review.setHotel(getHotel(id));
       entity = review;
     }

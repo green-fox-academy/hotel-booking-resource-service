@@ -9,6 +9,8 @@ import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Entity
 @Getter
@@ -28,5 +30,10 @@ public class Review extends ResourceEntity{
   @JsonIgnore
   @ManyToOne(cascade = CascadeType.MERGE)
   private Hotel hotel;
+
+  @PrePersist
+  public void prePersist() {
+    created_at = ZonedDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssZ"));
+  }
 }
 
