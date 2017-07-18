@@ -28,7 +28,8 @@ public class Review extends ResourceEntity{
   private String description;
   private String created_at;
   @JsonIgnore
-  @ManyToOne(cascade = CascadeType.MERGE)
+  @ManyToOne(cascade = CascadeType.ALL)
+  @JoinColumn
   private Hotel hotel;
 
   @PrePersist
