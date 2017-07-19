@@ -103,6 +103,8 @@ public class EntityListingService {
       hotelRepository.save((Hotel) entity);
     } else if (entity.getClass().equals(Review.class)) {
       reviewRepository.save((Review) entity);
+    } else {
+      bookingRepository.save((Booking) entity);
     }
   }
 

@@ -109,6 +109,14 @@ public class RESTController {
     entityListingService.deleteReview(reviewId);
   }
 
+  @ResponseStatus(code = HttpStatus.CREATED)
+  @PostMapping("/api/hotels/{id}/bookings")
+  public EntityList createBooking(@RequestBody @Valid EntityList<EntityContainer<Booking>, Object> singleBooking,
+                                 @PathVariable Long id, HttpServletRequest
+                                         request) {
+    return entityListingService.addEntity(singleBooking, request, id);
+  }
+
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/{id}/bookings")
   public EntityList listBookings(@RequestParam LinkedHashMap<String, Object> allRequestParams, @PathVariable Long id, Pageable pageable,

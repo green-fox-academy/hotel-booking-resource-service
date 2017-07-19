@@ -30,8 +30,10 @@ public class Hotel extends ResourceEntity {
   private Integer stars;
   @Formula("(select AVG(r.rating) FROM review r WHERE r.hotel_id=id)")
   private Double average_rating;
+  @JsonIgnore
   @OneToMany(mappedBy = "hotel", cascade = CascadeType.MERGE) // can't touch this!!!!
   private List<Review> reviews = new ArrayList<>();
+  @JsonIgnore
   @OneToMany(mappedBy = "hotel", cascade = CascadeType.MERGE) // can't touch this!!!!
   private List<Booking> bookings = new ArrayList<>();
 }
