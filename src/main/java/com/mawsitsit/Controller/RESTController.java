@@ -109,6 +109,16 @@ public class RESTController {
     entityListingService.deleteReview(reviewId);
   }
 
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/api/hotels/{id}/bookings")
+  public EntityList listBookings(@RequestParam LinkedHashMap<String, Object> allRequestParams, @PathVariable Long id, Pageable pageable,
+                                       HttpServletRequest request) {
+    allRequestParams.put("hotel", id);
+    return entityListingService.createList(request, entityListingService.queryBookings(parameterHandler.getParameters
+            (allRequestParams), pageable, id));
+  }
+
+
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Response badRequest(MethodArgumentNotValidException e, HttpServletRequest request) {
