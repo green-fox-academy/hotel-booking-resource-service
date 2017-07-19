@@ -125,7 +125,7 @@ public class RESTController {
   }
 
   @ResponseStatus(code = HttpStatus.OK)
-  @DeleteMapping("/api/hotels/booking/{bookingId}")
+  @DeleteMapping("/api/hotels/bookings/{bookingId}")
   public void deleteBooking(@PathVariable Long bookingId, HttpServletRequest request) throws Exception {
     entityListingService.deleteBooking(bookingId);
   }

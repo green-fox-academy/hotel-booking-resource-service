@@ -219,6 +219,12 @@ public class RESTControllerTest_withH2 {
   }
 
   @Test
+  public void testDeleteBooking_withValidId() throws Exception {
+    mockMvc.perform(delete("/api/hotels/bookings/2"));
+    assertEquals(null, bookingRepository.findOne(2L));
+  }
+
+  @Test
   public <S> void testUpdateHotel_withValidId() throws Exception {
     Hotel hotel = initHotel();
     hotel.setLocation("Szeged");
