@@ -130,7 +130,13 @@ public class RESTController {
     entityListingService.deleteBooking(bookingId);
   }
 
-
+  @ResponseStatus(code = HttpStatus.OK)
+  @PatchMapping("/api/hotels/bookings/{bookingId}")
+  public EntityList updateBooking(@PathVariable Long bookingId, @RequestBody EntityList<EntityContainer<Booking>, Object>
+          incomingAttributes, HttpServletRequest request) throws Exception {
+    return entityListingService.updateEntity(bookingId, incomingAttributes, request);
+  }
+  
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Response badRequest(MethodArgumentNotValidException e, HttpServletRequest request) {
