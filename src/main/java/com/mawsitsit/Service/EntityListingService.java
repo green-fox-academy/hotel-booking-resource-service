@@ -166,8 +166,8 @@ public class EntityListingService {
     for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
       list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
     }
-    EntityList entityList = new EntityList(relationshipLinks, null, null, null);
-    return new Relationships<>(entityList, list);
+    EntityList entityList = new EntityList(relationshipLinks, list, null, null);
+    return new Relationships(entityList);
   }
 
   private <T extends ResourceEntity> List<EntityContainer<Review>> getHotelIncluded(T entity) {

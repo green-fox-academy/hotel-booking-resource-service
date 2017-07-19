@@ -7,7 +7,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Relationships<T> {
+public class Relationships {
   private EntityList reviews;
-  private T data;
 }
