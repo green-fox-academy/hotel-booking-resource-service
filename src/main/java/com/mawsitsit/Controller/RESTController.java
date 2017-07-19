@@ -118,6 +118,11 @@ public class RESTController {
             (allRequestParams), pageable, id));
   }
 
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/api/hotels/bookings/{bookingId}")
+  public EntityList singleBooking(@PathVariable Long bookingId, HttpServletRequest request) {
+    return entityListingService.wrapEntity(entityListingService.getBooking(bookingId), request);
+  }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
