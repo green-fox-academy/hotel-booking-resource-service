@@ -133,6 +133,16 @@ public class RESTControllerTest_withH2 {
   }
 
   @Test
+  public void testListAllBookings() throws Exception {
+    mockMvc.perform(get("/api/bookings"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data[0]").exists())
+            .andExpect(jsonPath("$.data[1]").exists())
+            .andExpect(jsonPath("$.data[2]").exists())
+            .andExpect(jsonPath("$.data[3]").doesNotExist());
+  }
+
+  @Test
   public void testHotels_withTwoFilterParams() throws Exception {
     mockMvc.perform(get("/api/hotels?stars=4&has_swimming_pool=false"))
             .andExpect(status().isOk())

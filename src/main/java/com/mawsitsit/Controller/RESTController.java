@@ -128,7 +128,7 @@ public class RESTController {
 
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/bookings")
-  public EntityList listAll(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable, HttpServletRequest request) {
+  public EntityList listAllBookings(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable, HttpServletRequest request) {
     return entityListingService.createList(request, entityListingService.queryAllBookings(parameterHandler.getParameters
             (allRequestParams), pageable));
   }
