@@ -197,6 +197,15 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.errors[0].detail").value("No reviews found by id: 10"));
   }
 
+@Test
+  public void testSingleBooking_withInvalidId() throws Exception {
+    mockMvc.perform(get("/api/hotels/bookings/10"))
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.errors[0].status").value(404))
+            .andExpect(jsonPath("$.errors[0].title").value("Not Found"))
+            .andExpect(jsonPath("$.errors[0].detail").value("No bookings found by id: 10"));
+  }
+
   @Test
   public void testDeleteHotel_withValidId() throws Exception {
     mockMvc.perform(delete("/api/hotels/2"));
