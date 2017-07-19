@@ -15,10 +15,10 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Hotel extends ResourceEntity{
+public class Hotel extends ResourceEntity {
   @JsonIgnore
   @Id
-  @GeneratedValue (strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
   @NotNull
   private String location, name, main_image_src;
@@ -32,5 +32,7 @@ public class Hotel extends ResourceEntity{
   private Double average_rating;
   @OneToMany(mappedBy = "hotel", cascade = CascadeType.MERGE) // can't touch this!!!!
   private List<Review> reviews = new ArrayList<>();
+  @OneToMany(mappedBy = "hotel", cascade = CascadeType.MERGE) // can't touch this!!!!
+  private List<Booking> bookings = new ArrayList<>();
 }
 
