@@ -259,4 +259,22 @@ public class RESTControllerTest_withH2 {
             .andExpect(jsonPath("$.data.attributes.rating").value(4))
             .andExpect(jsonPath("$.data.id").value(1));
   }
+
+  @Test
+  public <S> void testUpdateBooking_withValidId() throws Exception {
+    Booking booking = initBooking();
+    booking.setGuests(6);
+    EntityList<EntityContainer, S> entityList = new EntityList<>(null, new EntityContainer("booking", 1L, booking),
+            null, null);
+
+    ObjectMapper mapper = new ObjectMapper();
+    String jsonInput = mapper.writeValueAsString(entityList);
+
+    mockMvc.perform(patch("/api/hotels/bookings/1")
+            .contentType(contentType)
+            .content(jsonInput))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.attributes.guests").value(6))
+            .andExpect(jsonPath("$.data.id").value(1));
+  }
 }
