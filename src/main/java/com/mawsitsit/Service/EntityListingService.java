@@ -133,6 +133,14 @@ public class EntityListingService {
     return review;
   }
 
+  public Booking getBooking(Long id) throws EmptyResultDataAccessException {
+    Booking booking = bookingRepository.findOne(id);
+    if (booking == null) {
+      throw new EmptyResultDataAccessException(id.toString(), id.intValue());
+    }
+    return booking;
+  }
+
   public <T extends ResourceEntity> EntityList wrapEntity(T entity, HttpServletRequest request) {
     EntityContainer<T> container = new EntityContainer<>(entity.getClass().getSimpleName(), entity.getId(), entity);
     Links link = new Links();
