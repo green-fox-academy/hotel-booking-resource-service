@@ -15,7 +15,7 @@ import java.time.format.DateTimeFormatter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Booking {
+public class Booking extends ResourceEntity {
   @JsonIgnore
   @Id
   @GenericGenerator(name = "generator", strategy = "increment")

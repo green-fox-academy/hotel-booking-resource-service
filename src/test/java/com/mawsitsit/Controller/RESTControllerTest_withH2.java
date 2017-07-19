@@ -2,10 +2,8 @@ package com.mawsitsit.Controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.mawsitsit.BookingresourceApplication;
-import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.EntityContainer;
-import com.mawsitsit.Model.EntityList;
-import com.mawsitsit.Model.Review;
+import com.mawsitsit.Model.*;
+import com.mawsitsit.Repository.BookingRepository;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Repository.ReviewRepository;
 import com.mawsitsit.Service.MessageHandler;
@@ -25,6 +23,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.nio.charset.Charset;
 
+import static com.mawsitsit.Service.EntityListingServiceTest.initBooking;
 import static com.mawsitsit.Service.EntityListingServiceTest.initReview;
 import static org.junit.Assert.*;
 
@@ -53,6 +52,9 @@ public class RESTControllerTest_withH2 {
 
   @Autowired
   private HotelRepository hotelRepository;
+
+  @Autowired
+  private BookingRepository bookingRepository;
 
   @Autowired
   private ReviewRepository reviewRepository;
@@ -93,6 +95,17 @@ public class RESTControllerTest_withH2 {
     reviewRepository.save(review2);
     reviewRepository.save(review3);
     reviewRepository.save(review4);
+
+    Booking booking1 = initBooking();
+    booking1.setHotel(hotelRepository.findOne(1L));
+    Booking booking2 = initBooking();
+    booking2.setHotel(hotelRepository.findOne(1L));
+    Booking booking3 = initBooking();
+    booking3.setHotel(hotelRepository.findOne(1L));
+    booking3.setGuests(2);
+    bookingRepository.save(booking1);
+    bookingRepository.save(booking2);
+    bookingRepository.save(booking3);
   }
 
   @Test
@@ -106,6 +119,14 @@ public class RESTControllerTest_withH2 {
   @Test
   public void testReviews_withOneFilterParam() throws Exception {
     mockMvc.perform(get("/api/hotels/1/reviews?rating=2"))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data[1]").exists())
+            .andExpect(jsonPath("$.data[2]").doesNotExist());
+  }
+
+  @Test
+  public void testBookings_withOneFilterParam() throws Exception {
+    mockMvc.perform(get("/api/hotels/1/bookings?guests=3"))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data[1]").exists())
             .andExpect(jsonPath("$.data[2]").doesNotExist());

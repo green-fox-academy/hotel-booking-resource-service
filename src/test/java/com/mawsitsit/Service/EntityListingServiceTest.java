@@ -1,9 +1,6 @@
 package com.mawsitsit.Service;
 
-import com.mawsitsit.Model.Hotel;
-import com.mawsitsit.Model.EntityContainer;
-import com.mawsitsit.Model.EntityList;
-import com.mawsitsit.Model.Review;
+import com.mawsitsit.Model.*;
 import com.mawsitsit.Repository.HotelRepository;
 import org.junit.Before;
 import org.junit.Test;
@@ -143,4 +140,16 @@ public class EntityListingServiceTest {
     review.setRating(1);
     return review;
   }
+
+  public static Booking initBooking(){
+   Booking booking = new Booking();
+    booking.setGuests(3);
+    booking.setStart_date("holnap");
+    booking.setEnd_date("tegnap");
+    booking.setDescription("we do not want shit in the room");
+    booking.setCreated_at("today");
+    return booking;
+  }
+
+
 }
