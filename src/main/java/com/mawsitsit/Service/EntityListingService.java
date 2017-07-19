@@ -194,9 +194,13 @@ public class EntityListingService {
     if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
       hotelRepository.save((Hotel) entityToUpdate);
       return wrapEntity(getHotel(id), request);
-    } else
+    } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
       reviewRepository.save((Review) entityToUpdate);
-    return wrapEntity(getReview(id), request);
+      return wrapEntity(getReview(id), request);
+    } else {
+      bookingRepository.save((Booking) entityToUpdate);
+      return wrapEntity(getBooking(id), request);
+    }
   }
 
   private <T extends ResourceEntity, S> ResourceEntity updateField(EntityList<EntityContainer<T>, S> incomingAttributes,

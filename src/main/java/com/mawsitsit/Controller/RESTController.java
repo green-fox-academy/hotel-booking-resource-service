@@ -136,7 +136,7 @@ public class RESTController {
           incomingAttributes, HttpServletRequest request) throws Exception {
     return entityListingService.updateEntity(bookingId, incomingAttributes, request);
   }
-  
+
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public Response badRequest(MethodArgumentNotValidException e, HttpServletRequest request) {
