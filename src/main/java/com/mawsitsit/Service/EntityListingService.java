@@ -1,6 +1,7 @@
 package com.mawsitsit.Service;
 
 import com.mawsitsit.Model.*;
+import com.mawsitsit.Repository.BookingRepository;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class EntityListingService {
 
   @Autowired
   private ReviewRepository reviewRepository;
+
+  @Autowired
+  private BookingRepository bookingRepository;
 
   public <S> EntityList<List<EntityContainer<ResourceEntity>>, S> createList(HttpServletRequest request, Page page) {
     List<ResourceEntity> entities = page.getContent();
@@ -166,6 +170,11 @@ public class EntityListingService {
   public Page queryReviews(Specification<ResourceEntity> specs, Pageable pageable, Long id) {
     return specs == null ? reviewRepository.findAllByHotel_id(id, pageable) : reviewRepository.findAll(specs, pageable);
   }
+
+  public Page queryBookings(Specification<ResourceEntity> specs, Pageable pageable, Long id) {
+    return specs == null ? bookingRepository.findAllByHotel_id(id, pageable) : bookingRepository.findAll(specs, pageable);
+  }
+
 
   public <T extends ResourceEntity, S> EntityList updateEntity(Long id, EntityList<EntityContainer<T>, S>
           incomingAttributes, HttpServletRequest request) throws Exception {
