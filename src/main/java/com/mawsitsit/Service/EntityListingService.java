@@ -115,6 +115,11 @@ public class EntityListingService {
       review.setHotel(getHotel(id));
       entity = review;
     }
+    if (entity.getClass().equals(Booking.class)) {
+      Booking booking = (Booking) entity;
+      booking.setHotel(getHotel(id));
+      entity = booking;
+    }
     return entity;
   }
 
@@ -185,6 +190,9 @@ public class EntityListingService {
     return specs == null ? bookingRepository.findAllByHotel_id(id, pageable) : bookingRepository.findAll(specs, pageable);
   }
 
+  public Page queryAllBookings(Specification<ResourceEntity> specs, Pageable pageable) {
+    return specs == null ? bookingRepository.findAll(pageable) : bookingRepository.findAll(specs, pageable);
+  }
 
   public <T extends ResourceEntity, S> EntityList updateEntity(Long id, EntityList<EntityContainer<T>, S>
           incomingAttributes, HttpServletRequest request) throws Exception {
