@@ -91,8 +91,8 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/api/hotels/{id}/reviews")
   public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>, Object> singleReview,
-                                   @PathVariable Long id, HttpServletRequest
-          request) {
+                                 @PathVariable Long id, HttpServletRequest
+                                         request) {
     return entityListingService.addEntity(singleReview, request, id);
   }
 
@@ -112,7 +112,7 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.OK)
   @GetMapping("/api/hotels/{id}/bookings")
   public EntityList listBookings(@RequestParam LinkedHashMap<String, Object> allRequestParams, @PathVariable Long id, Pageable pageable,
-                                       HttpServletRequest request) {
+                                 HttpServletRequest request) {
     allRequestParams.put("hotel", id);
     return entityListingService.createList(request, entityListingService.queryBookings(parameterHandler.getParameters
             (allRequestParams), pageable, id));
@@ -123,6 +123,13 @@ public class RESTController {
   public EntityList singleBooking(@PathVariable Long bookingId, HttpServletRequest request) {
     return entityListingService.wrapEntity(entityListingService.getBooking(bookingId), request);
   }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @DeleteMapping("/api/hotels/booking/{bookingId}")
+  public void deleteBooking(@PathVariable Long bookingId, HttpServletRequest request) throws Exception {
+    entityListingService.deleteBooking(bookingId);
+  }
+
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)
   @ExceptionHandler(MethodArgumentNotValidException.class)

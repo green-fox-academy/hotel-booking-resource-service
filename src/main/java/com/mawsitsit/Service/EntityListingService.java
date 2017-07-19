@@ -219,4 +219,8 @@ public class EntityListingService {
   public void deleteReview(Long id) throws Exception {
     reviewRepository.delete(id);
   }
+
+  public void deleteBooking(Long id) throws Exception {
+    bookingRepository.delete(id);
+  }
 }
