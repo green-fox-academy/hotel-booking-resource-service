@@ -160,20 +160,30 @@ public class EntityListingService {
   }
 
   private <T extends ResourceEntity> Relationships getHotelRelationships(HttpServletRequest request, T entity) {
-    Links relationshipLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
+    Links reviewLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
             null, request.getRequestURL().toString() + "/reviews");
-    List<EntityContainer> list = new ArrayList<>();
+    Links bookingLinks = new Links(null, request.getRequestURL().toString() + "/relationships/bookings", null,
+            null, request.getRequestURL().toString() + "/bookings");
+    List<EntityContainer> reviewList = new ArrayList<>();
+    List<EntityContainer> bookingList = new ArrayList<>();
     for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
-      list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
+      reviewList.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
     }
-    EntityList entityList = new EntityList(relationshipLinks, list, null, null);
-    return new Relationships(entityList);
+    for (Booking booking : bookingRepository.findAllByHotel_id(entity.getId())) {
+      bookingList.add(new EntityContainer(booking.getClass().getSimpleName(), booking.getId(), null));
+    }
+    EntityList entityListReview = new EntityList(reviewLinks, reviewList, null, null);
+    EntityList entityListBooking = new EntityList(bookingLinks, bookingList, null, null);
+    return new Relationships(entityListReview, entityListBooking);
   }
 
-  private <T extends ResourceEntity> List<EntityContainer<Review>> getHotelIncluded(T entity) {
-    List<EntityContainer<Review>> entityContainers = new ArrayList<>();
+  private <T extends ResourceEntity> List<EntityContainer<ResourceEntity>> getHotelIncluded(T entity) {
+    List<EntityContainer<ResourceEntity>> entityContainers = new ArrayList<>();
     for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
       entityContainers.add(new EntityContainer<>(review.getClass().getSimpleName(), review.getId(), review));
+    }
+    for (Booking booking : bookingRepository.findAllByHotel_id(entity.getId())) {
+      entityContainers.add(new EntityContainer<>(booking.getClass().getSimpleName(), booking.getId(), booking));
     }
     return entityContainers;
   }
