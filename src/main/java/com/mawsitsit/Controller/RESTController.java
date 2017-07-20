@@ -91,8 +91,8 @@ public class RESTController {
   @ResponseStatus(code = HttpStatus.CREATED)
   @PostMapping("/api/hotels/{id}/reviews")
   public EntityList createReview(@RequestBody @Valid EntityList<EntityContainer<Review>, Object> singleReview,
-                                   @PathVariable Long id, HttpServletRequest
-          request) {
+                                 @PathVariable Long id, HttpServletRequest
+                                         request) {
     return entityListingService.addEntity(singleReview, request, id);
   }
 
@@ -107,6 +107,49 @@ public class RESTController {
   @DeleteMapping("/api/hotels/reviews/{reviewId}")
   public void deleteReview(@PathVariable Long reviewId, HttpServletRequest request) throws Exception {
     entityListingService.deleteReview(reviewId);
+  }
+
+  @ResponseStatus(code = HttpStatus.CREATED)
+  @PostMapping("/api/hotels/{id}/bookings")
+  public EntityList createBooking(@RequestBody @Valid EntityList<EntityContainer<Booking>, Object> singleBooking,
+                                 @PathVariable Long id, HttpServletRequest
+                                         request) {
+    return entityListingService.addEntity(singleBooking, request, id);
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/api/hotels/{id}/bookings")
+  public EntityList listBookings(@RequestParam LinkedHashMap<String, Object> allRequestParams, @PathVariable Long id, Pageable pageable,
+                                 HttpServletRequest request) {
+    allRequestParams.put("hotel", id);
+    return entityListingService.createList(request, entityListingService.queryBookings(parameterHandler.getParameters
+            (allRequestParams), pageable, id));
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/api/bookings")
+  public EntityList listAllBookings(@RequestParam LinkedHashMap<String, Object> allRequestParams, Pageable pageable, HttpServletRequest request) {
+    return entityListingService.createList(request, entityListingService.queryAllBookings(parameterHandler.getParameters
+            (allRequestParams), pageable));
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @GetMapping("/api/hotels/bookings/{bookingId}")
+  public EntityList singleBooking(@PathVariable Long bookingId, HttpServletRequest request) {
+    return entityListingService.wrapEntity(entityListingService.getBooking(bookingId), request);
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @DeleteMapping("/api/hotels/bookings/{bookingId}")
+  public void deleteBooking(@PathVariable Long bookingId, HttpServletRequest request) throws Exception {
+    entityListingService.deleteBooking(bookingId);
+  }
+
+  @ResponseStatus(code = HttpStatus.OK)
+  @PatchMapping("/api/hotels/bookings/{bookingId}")
+  public EntityList updateBooking(@PathVariable Long bookingId, @RequestBody EntityList<EntityContainer<Booking>, Object>
+          incomingAttributes, HttpServletRequest request) throws Exception {
+    return entityListingService.updateEntity(bookingId, incomingAttributes, request);
   }
 
   @ResponseStatus(code = HttpStatus.BAD_REQUEST)

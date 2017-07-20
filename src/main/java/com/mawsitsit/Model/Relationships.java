@@ -1,5 +1,6 @@
 package com.mawsitsit.Model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +8,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class Relationships<T> {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class Relationships {
   private EntityList reviews;
-  private T data;
+  private EntityList bookings;
 }

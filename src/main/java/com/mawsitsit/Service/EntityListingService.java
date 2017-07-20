@@ -1,6 +1,7 @@
 package com.mawsitsit.Service;
 
 import com.mawsitsit.Model.*;
+import com.mawsitsit.Repository.BookingRepository;
 import com.mawsitsit.Repository.HotelRepository;
 import com.mawsitsit.Repository.ReviewRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class EntityListingService {
 
   @Autowired
   private ReviewRepository reviewRepository;
+
+  @Autowired
+  private BookingRepository bookingRepository;
 
   public <S> EntityList<List<EntityContainer<ResourceEntity>>, S> createList(HttpServletRequest request, Page page) {
     List<ResourceEntity> entities = page.getContent();
@@ -99,6 +103,8 @@ public class EntityListingService {
       hotelRepository.save((Hotel) entity);
     } else if (entity.getClass().equals(Review.class)) {
       reviewRepository.save((Review) entity);
+    } else {
+      bookingRepository.save((Booking) entity);
     }
   }
 
@@ -108,6 +114,11 @@ public class EntityListingService {
       Review review = (Review) entity;
       review.setHotel(getHotel(id));
       entity = review;
+    }
+    if (entity.getClass().equals(Booking.class)) {
+      Booking booking = (Booking) entity;
+      booking.setHotel(getHotel(id));
+      entity = booking;
     }
     return entity;
   }
@@ -129,6 +140,14 @@ public class EntityListingService {
     return review;
   }
 
+  public Booking getBooking(Long id) throws EmptyResultDataAccessException {
+    Booking booking = bookingRepository.findOne(id);
+    if (booking == null) {
+      throw new EmptyResultDataAccessException(id.toString(), id.intValue());
+    }
+    return booking;
+  }
+
   public <T extends ResourceEntity> EntityList wrapEntity(T entity, HttpServletRequest request) {
     EntityContainer<T> container = new EntityContainer<>(entity.getClass().getSimpleName(), entity.getId(), entity);
     Links link = new Links();
@@ -141,20 +160,30 @@ public class EntityListingService {
   }
 
   private <T extends ResourceEntity> Relationships getHotelRelationships(HttpServletRequest request, T entity) {
-    Links relationshipLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
+    Links reviewLinks = new Links(null, request.getRequestURL().toString() + "/relationships/reviews", null,
             null, request.getRequestURL().toString() + "/reviews");
-    List<EntityContainer> list = new ArrayList<>();
+    Links bookingLinks = new Links(null, request.getRequestURL().toString() + "/relationships/bookings", null,
+            null, request.getRequestURL().toString() + "/bookings");
+    List<EntityContainer> reviewList = new ArrayList<>();
+    List<EntityContainer> bookingList = new ArrayList<>();
     for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
-      list.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
+      reviewList.add(new EntityContainer(review.getClass().getSimpleName(), review.getId(), null));
     }
-    EntityList entityList = new EntityList(relationshipLinks, null, null, null);
-    return new Relationships<>(entityList, list);
+    for (Booking booking : bookingRepository.findAllByHotel_id(entity.getId())) {
+      bookingList.add(new EntityContainer(booking.getClass().getSimpleName(), booking.getId(), null));
+    }
+    EntityList entityListReview = new EntityList(reviewLinks, reviewList, null, null);
+    EntityList entityListBooking = new EntityList(bookingLinks, bookingList, null, null);
+    return new Relationships(entityListReview, entityListBooking);
   }
 
-  private <T extends ResourceEntity> List<EntityContainer<Review>> getHotelIncluded(T entity) {
-    List<EntityContainer<Review>> entityContainers = new ArrayList<>();
+  private <T extends ResourceEntity> List<EntityContainer<ResourceEntity>> getHotelIncluded(T entity) {
+    List<EntityContainer<ResourceEntity>> entityContainers = new ArrayList<>();
     for (Review review : reviewRepository.findAllByHotel_id(entity.getId())) {
       entityContainers.add(new EntityContainer<>(review.getClass().getSimpleName(), review.getId(), review));
+    }
+    for (Booking booking : bookingRepository.findAllByHotel_id(entity.getId())) {
+      entityContainers.add(new EntityContainer<>(booking.getClass().getSimpleName(), booking.getId(), booking));
     }
     return entityContainers;
   }
@@ -167,9 +196,24 @@ public class EntityListingService {
     return specs == null ? reviewRepository.findAllByHotel_id(id, pageable) : reviewRepository.findAll(specs, pageable);
   }
 
+  public Page queryBookings(Specification<ResourceEntity> specs, Pageable pageable, Long id) {
+    return specs == null ? bookingRepository.findAllByHotel_id(id, pageable) : bookingRepository.findAll(specs, pageable);
+  }
+
+  public Page queryAllBookings(Specification<ResourceEntity> specs, Pageable pageable) {
+    return specs == null ? bookingRepository.findAll(pageable) : bookingRepository.findAll(specs, pageable);
+  }
+
   public <T extends ResourceEntity, S> EntityList updateEntity(Long id, EntityList<EntityContainer<T>, S>
           incomingAttributes, HttpServletRequest request) throws Exception {
-    ResourceEntity entityToUpdate = incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class) ? hotelRepository.findOne(id) : reviewRepository.findOne(id);
+    ResourceEntity entityToUpdate;
+    if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
+      entityToUpdate = hotelRepository.findOne(id);
+    } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
+      entityToUpdate = reviewRepository.findOne(id);
+    } else {
+      entityToUpdate = bookingRepository.findOne(id);
+    }
     if (entityToUpdate == null) {
       throw new EmptyResultDataAccessException(id.toString(), id.intValue());
     }
@@ -177,9 +221,13 @@ public class EntityListingService {
     if (incomingAttributes.getData().getAttributes().getClass().equals(Hotel.class)) {
       hotelRepository.save((Hotel) entityToUpdate);
       return wrapEntity(getHotel(id), request);
-    } else
+    } else if (incomingAttributes.getData().getAttributes().getClass().equals(Review.class)) {
       reviewRepository.save((Review) entityToUpdate);
-    return wrapEntity(getReview(id), request);
+      return wrapEntity(getReview(id), request);
+    } else {
+      bookingRepository.save((Booking) entityToUpdate);
+      return wrapEntity(getBooking(id), request);
+    }
   }
 
   private <T extends ResourceEntity, S> ResourceEntity updateField(EntityList<EntityContainer<T>, S> incomingAttributes,
@@ -201,5 +249,9 @@ public class EntityListingService {
 
   public void deleteReview(Long id) throws Exception {
     reviewRepository.delete(id);
+  }
+
+  public void deleteBooking(Long id) throws Exception {
+    bookingRepository.delete(id);
   }
 }
